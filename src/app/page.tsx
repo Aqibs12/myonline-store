@@ -1,65 +1,54 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { listActiveProducts } from "@/lib/products";
+import { ProductCard } from "@/components/product-card";
 
-export default function Home() {
+const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "My Online Store";
+
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const products = await listActiveProducts();
+  const featured = products.slice(0, 8);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="flex flex-col">
+      <section className="border-b border-black/10 bg-gradient-to-b from-orange-50 to-white py-16 dark:border-white/10 dark:from-orange-950/20 dark:to-black">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">{STORE_NAME}</h1>
+          <p className="max-w-xl text-black/60 dark:text-white/60">
+            Quality products, fair prices, delivered to your door — Cash on Delivery, JazzCash & Easypaisa accepted.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/products"
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-orange-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-700"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Shop now
+            <ArrowRight size={16} />
+          </Link>
         </div>
-      </main>
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl px-4 py-12">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-xl font-bold">Featured products</h2>
+          <Link href="/products" className="text-sm font-medium text-orange-600 hover:underline">
+            View all
+          </Link>
+        </div>
+
+        {featured.length === 0 ? (
+          <p className="text-black/60 dark:text-white/60">
+            No products yet — check back soon, or sign in as the store owner to add your first product.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {featured.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

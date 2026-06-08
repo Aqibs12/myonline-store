@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// Replace OWNER_UID with your Firebase Auth UID (Authentication > Users > copy UID).
+// This must match NEXT_PUBLIC_OWNER_UID in your .env.local.
+function isOwner() {
+  return request.auth != null && request.auth.uid == "OWNER_UID";
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /products/{productId} {
+      // Anyone can read active products; the owner can read everything (including hidden ones).
+      allow read: if resource.data.active == true || isOwner();
+      allow create, update, delete: if isOwner();
+    }
+
+    match /orders/{orderId} {
+      // Customers can create their own orders and read only their own; the owner can read/manage all.
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == "pending";
+      allow read: if request.auth != null
+        && (resource.data.userId == request.auth.uid || isOwner());
+      // Only the owner can change order status after creation.
+      allow update: if isOwner();
+      allow delete: if false;
+    }
+  }
+}

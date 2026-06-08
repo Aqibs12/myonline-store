@@ -1,0 +1,196 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import { useAuth } from "@/lib/auth-context";
+import { useCartStore } from "@/lib/cart-store";
+import { createOrder } from "@/lib/orders";
+import { formatPrice } from "@/lib/format";
+import type { PaymentMethod } from "@/types";
+
+const PAYMENT_OPTIONS: { value: PaymentMethod; label: string; hint: string }[] = [
+  { value: "cod", label: "Cash on Delivery", hint: "Pay in cash when your order arrives" },
+  { value: "jazzcash", label: "JazzCash", hint: "We'll contact you to confirm payment details" },
+  { value: "easypaisa", label: "Easypaisa", hint: "We'll contact you to confirm payment details" },
+];
+
+export default function CheckoutPage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
+  const items = useCartStore((s) => s.items);
+  const subtotal = useCartStore((s) => s.subtotal());
+  const clear = useCartStore((s) => s.clear);
+
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [notes, setNotes] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
+  const [submitting, setSubmitting] = useState(false);
+
+  if (!loading && !user) {
+    return (
+      <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 px-4 text-center">
+        <h1 className="text-2xl font-bold">Sign in to checkout</h1>
+        <p className="text-black/60 dark:text-white/60">Please sign in so we can save your order and let you track it.</p>
+        <Link href="/login" className="mt-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700">
+          Sign in
+        </Link>
+      </div>
+    );
+  }
+
+  if (!loading && items.length === 0) {
+    return (
+      <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 px-4 text-center">
+        <h1 className="text-2xl font-bold">Your cart is empty</h1>
+        <Link href="/products" className="mt-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700">
+          Continue shopping
+        </Link>
+      </div>
+    );
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!user) return;
+    setSubmitting(true);
+    try {
+      const orderId = await createOrder({
+        userId: user.uid,
+        userEmail: user.email ?? "",
+        items: items.map((i) => ({
+          productId: i.productId,
+          name: i.name,
+          price: i.price,
+          quantity: i.quantity,
+          image: i.image,
+        })),
+        subtotal,
+        total: subtotal,
+        paymentMethod,
+        shippingAddress: { fullName, phone, address, city, notes: notes || undefined },
+      });
+      clear();
+      toast.success("Order placed!");
+      router.push(`/orders?placed=${orderId}`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not place order. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="text-2xl font-bold">Checkout</h1>
+
+      <div className="mt-6 grid gap-8 md:grid-cols-[1.2fr_1fr]">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">Shipping details</h2>
+          <label className="flex flex-col gap-1 text-sm font-medium">
+            Full name
+            <input
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm font-medium">
+            Phone number
+            <input
+              required
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="03XX-XXXXXXX"
+              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm font-medium">
+            Address
+            <textarea
+              required
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              rows={2}
+              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm font-medium">
+            City
+            <input
+              required
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm font-medium">
+            Order notes (optional)
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={2}
+              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            />
+          </label>
+
+          <h2 className="mt-2 text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">Payment method</h2>
+          <div className="flex flex-col gap-2">
+            {PAYMENT_OPTIONS.map((opt) => (
+              <label
+                key={opt.value}
+                className="flex cursor-pointer items-start gap-3 rounded-lg border border-black/15 p-3 text-sm transition has-[:checked]:border-orange-600 has-[:checked]:bg-orange-50 dark:border-white/20 dark:has-[:checked]:bg-orange-950/20"
+              >
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value={opt.value}
+                  checked={paymentMethod === opt.value}
+                  onChange={() => setPaymentMethod(opt.value)}
+                  className="mt-0.5"
+                />
+                <span>
+                  <span className="block font-medium">{opt.label}</span>
+                  <span className="block text-black/50 dark:text-white/50">{opt.hint}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="mt-4 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-700 disabled:opacity-60"
+          >
+            {submitting ? "Placing order..." : `Place order — ${formatPrice(subtotal)}`}
+          </button>
+        </form>
+
+        <div className="h-fit rounded-xl border border-black/10 p-4 dark:border-white/10">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">Order summary</h2>
+          <ul className="mt-3 flex flex-col gap-2 text-sm">
+            {items.map((item) => (
+              <li key={item.productId} className="flex justify-between gap-2">
+                <span className="text-black/70 dark:text-white/70">
+                  {item.name} <span className="text-black/40">× {item.quantity}</span>
+                </span>
+                <span className="font-medium">{formatPrice(item.price * item.quantity)}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 flex justify-between border-t border-black/10 pt-3 text-sm font-bold dark:border-white/10">
+            <span>Total</span>
+            <span>{formatPrice(subtotal)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
