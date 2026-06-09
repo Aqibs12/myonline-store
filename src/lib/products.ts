@@ -72,9 +72,13 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return toProduct(d.id, d.data());
 }
 
+function stripUndefined<T extends object>(obj: T): Partial<T> {
+  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as Partial<T>;
+}
+
 export async function createProduct(input: ProductInput): Promise<string> {
   const ref = await addDoc(collection(getFirebaseDb(), PRODUCTS), {
-    ...input,
+    ...stripUndefined(input),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -83,7 +87,7 @@ export async function createProduct(input: ProductInput): Promise<string> {
 
 export async function updateProduct(id: string, input: Partial<ProductInput>): Promise<void> {
   await updateDoc(doc(getFirebaseDb(), PRODUCTS, id), {
-    ...input,
+    ...stripUndefined(input),
     updatedAt: serverTimestamp(),
   });
 }
