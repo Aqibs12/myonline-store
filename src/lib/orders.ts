@@ -11,7 +11,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getFirebaseDb } from "@/lib/firebase";
 import type { Order, OrderInput, OrderStatus } from "@/types";
 
 const ORDERS = "orders";
@@ -35,7 +35,7 @@ function toOrder(id: string, data: Record<string, unknown>): Order {
 }
 
 export async function createOrder(input: OrderInput): Promise<string> {
-  const ref = await addDoc(collection(db, ORDERS), {
+  const ref = await addDoc(collection(getFirebaseDb(), ORDERS), {
     ...input,
     status: "pending" satisfies OrderStatus,
     createdAt: serverTimestamp(),
@@ -45,25 +45,25 @@ export async function createOrder(input: OrderInput): Promise<string> {
 }
 
 export async function listOrdersForUser(userId: string): Promise<Order[]> {
-  const q = query(collection(db, ORDERS), where("userId", "==", userId), orderBy("createdAt", "desc"));
+  const q = query(collection(getFirebaseDb(), ORDERS), where("userId", "==", userId), orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => toOrder(d.id, d.data()));
 }
 
 export async function listAllOrders(): Promise<Order[]> {
-  const q = query(collection(db, ORDERS), orderBy("createdAt", "desc"));
+  const q = query(collection(getFirebaseDb(), ORDERS), orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => toOrder(d.id, d.data()));
 }
 
 export async function getOrder(id: string): Promise<Order | null> {
-  const snap = await getDoc(doc(db, ORDERS, id));
+  const snap = await getDoc(doc(getFirebaseDb(), ORDERS, id));
   if (!snap.exists()) return null;
   return toOrder(snap.id, snap.data());
 }
 
 export async function updateOrderStatus(id: string, status: OrderStatus): Promise<void> {
-  await updateDoc(doc(db, ORDERS, id), {
+  await updateDoc(doc(getFirebaseDb(), ORDERS, id), {
     status,
     updatedAt: serverTimestamp(),
   });

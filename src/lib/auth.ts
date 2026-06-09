@@ -5,24 +5,24 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 
 const googleProvider = new GoogleAuthProvider();
 
 export function signInWithEmail(email: string, password: string) {
-  return signInWithEmailAndPassword(auth, email, password);
+  return signInWithEmailAndPassword(getFirebaseAuth(), email, password);
 }
 
 export function registerWithEmail(email: string, password: string) {
-  return createUserWithEmailAndPassword(auth, email, password);
+  return createUserWithEmailAndPassword(getFirebaseAuth(), email, password);
 }
 
 export function signInWithGoogle() {
-  return signInWithPopup(auth, googleProvider);
+  return signInWithPopup(getFirebaseAuth(), googleProvider);
 }
 
 export function logOut() {
-  return signOut(auth);
+  return signOut(getFirebaseAuth());
 }
 
 export function authErrorMessage(error: unknown): string {

@@ -12,7 +12,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getFirebaseDb } from "@/lib/firebase";
 import type { Product, ProductInput } from "@/types";
 
 const PRODUCTS = "products";
@@ -40,7 +40,7 @@ export async function listActiveProducts(category?: string): Promise<Product[]> 
   try {
     const constraints = [where("active", "==", true)];
     if (category) constraints.push(where("category", "==", category));
-    const q = query(collection(db, PRODUCTS), ...constraints, orderBy("createdAt", "desc"));
+    const q = query(collection(getFirebaseDb(), PRODUCTS), ...constraints, orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
     return snap.docs.map((d) => toProduct(d.id, d.data()));
   } catch (error) {
@@ -52,20 +52,20 @@ export async function listActiveProducts(category?: string): Promise<Product[]> 
 }
 
 export async function listAllProducts(): Promise<Product[]> {
-  const q = query(collection(db, PRODUCTS), orderBy("createdAt", "desc"));
+  const q = query(collection(getFirebaseDb(), PRODUCTS), orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => toProduct(d.id, d.data()));
 }
 
 export async function getProduct(id: string): Promise<Product | null> {
-  const ref = doc(db, PRODUCTS, id);
+  const ref = doc(getFirebaseDb(), PRODUCTS, id);
   const snap = await getDoc(ref);
   if (!snap.exists()) return null;
   return toProduct(snap.id, snap.data());
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const q = query(collection(db, PRODUCTS), where("slug", "==", slug));
+  const q = query(collection(getFirebaseDb(), PRODUCTS), where("slug", "==", slug));
   const snap = await getDocs(q);
   if (snap.empty) return null;
   const d = snap.docs[0]!;
@@ -73,7 +73,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 }
 
 export async function createProduct(input: ProductInput): Promise<string> {
-  const ref = await addDoc(collection(db, PRODUCTS), {
+  const ref = await addDoc(collection(getFirebaseDb(), PRODUCTS), {
     ...input,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
@@ -82,14 +82,14 @@ export async function createProduct(input: ProductInput): Promise<string> {
 }
 
 export async function updateProduct(id: string, input: Partial<ProductInput>): Promise<void> {
-  await updateDoc(doc(db, PRODUCTS, id), {
+  await updateDoc(doc(getFirebaseDb(), PRODUCTS, id), {
     ...input,
     updatedAt: serverTimestamp(),
   });
 }
 
 export async function deleteProduct(id: string): Promise<void> {
-  await deleteDoc(doc(db, PRODUCTS, id));
+  await deleteDoc(doc(getFirebaseDb(), PRODUCTS, id));
 }
 
 export function slugify(text: string): string {
