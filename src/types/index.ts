@@ -25,6 +25,7 @@ export type ProductInput = Omit<Product, "id" | "createdAt" | "updatedAt">;
 
 export interface UserProfile {
   uid: string;
+  name: string | null;
   email: string | null;
   role: "owner" | "customer";
   createdAt: number;
