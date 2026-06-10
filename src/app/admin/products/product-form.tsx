@@ -8,6 +8,7 @@ import type { Category, Product, ProductInput } from "@/types";
 import { createProduct, updateProduct } from "@/lib/products";
 import { listCategories } from "@/lib/categories";
 import { slugify } from "@/lib/format";
+import { INPUT_CLASS } from "@/lib/ui";
 
 export function ProductForm({ product }: { product?: Product }) {
   const router = useRouter();
@@ -84,7 +85,7 @@ export function ProductForm({ product }: { product?: Product }) {
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+          className={INPUT_CLASS}
         />
       </label>
 
@@ -95,7 +96,7 @@ export function ProductForm({ product }: { product?: Product }) {
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+          className={INPUT_CLASS}
         />
       </label>
 
@@ -109,7 +110,7 @@ export function ProductForm({ product }: { product?: Product }) {
             step="0.01"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            className={INPUT_CLASS}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm font-medium">
@@ -120,7 +121,7 @@ export function ProductForm({ product }: { product?: Product }) {
             step="0.01"
             value={compareAtPrice}
             onChange={(e) => setCompareAtPrice(e.target.value)}
-            className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            className={INPUT_CLASS}
           />
         </label>
       </div>
@@ -132,7 +133,7 @@ export function ProductForm({ product }: { product?: Product }) {
             required
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            className={INPUT_CLASS}
           >
             <option value="" disabled>
               Select a category
@@ -158,7 +159,7 @@ export function ProductForm({ product }: { product?: Product }) {
             step="1"
             value={stock}
             onChange={(e) => setStock(e.target.value)}
-            className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+            className={INPUT_CLASS}
           />
         </label>
       </div>
@@ -180,7 +181,7 @@ export function ProductForm({ product }: { product?: Product }) {
               value={url}
               onChange={(e) => updateImageUrl(index, e.target.value)}
               placeholder="https://example.com/photo.jpg"
-              className="flex-1 rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+              className={`flex-1 ${INPUT_CLASS}`}
             />
             {images.length > 1 && (
               <button

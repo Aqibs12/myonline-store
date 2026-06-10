@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
 import { createCategory, deleteCategory, listCategories } from "@/lib/categories";
 import { slugify } from "@/lib/format";
+import { INPUT_CLASS } from "@/lib/ui";
 import type { Category } from "@/types";
 
 export default function AdminCategoriesPage() {
@@ -60,7 +61,7 @@ export default function AdminCategoriesPage() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Racks"
-          className="flex-1 rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+          className={`flex-1 ${INPUT_CLASS}`}
         />
         <button
           type="submit"

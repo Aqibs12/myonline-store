@@ -1,18 +1,34 @@
 rules_version = '2';
 
-// Replace OWNER_UID with your Firebase Auth UID (Authentication > Users > copy UID).
-// This must match NEXT_PUBLIC_OWNER_UID in your .env.local.
-function isOwner() {
-  return request.auth != null && request.auth.uid == "OWNER_UID";
-}
-
+// Replace OWNER_UID below with your Firebase Auth UID (Authentication > Users > copy UID).
+// This must match NEXT_PUBLIC_OWNER_UID in your .env.local / Vercel env vars — it's only
+// used to bootstrap the very first "owner" role on that account's first sign-in.
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isOwner() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "owner";
+    }
+
+    match /users/{userId} {
+      // Users can read their own profile; the owner can read and manage any profile.
+      allow read: if request.auth != null && (request.auth.uid == userId || isOwner());
+      // A user can only create their own profile, with the role determined by OWNER_UID.
+      allow create: if request.auth != null && request.auth.uid == userId &&
+        request.resource.data.role == (userId == "OWNER_UID" ? "owner" : "customer");
+      allow update: if isOwner();
+    }
+
+    match /categories/{categoryId} {
+      // Anyone can browse categories; only the owner can manage them.
+      allow read: if true;
+      allow write: if isOwner();
+    }
 
     match /products/{productId} {
-      // Anyone can read active products; the owner can read everything (including hidden ones).
-      allow read: if resource.data.active == true || isOwner();
-      allow create, update, delete: if isOwner();
+      // Anyone can browse products; only the owner can create/edit/delete.
+      allow read: if true;
+      allow write: if isOwner();
     }
 
     match /orders/{orderId} {

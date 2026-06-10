@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useCartStore } from "@/lib/cart-store";
 import { createOrder } from "@/lib/orders";
 import { formatPrice } from "@/lib/format";
+import { INPUT_CLASS } from "@/lib/ui";
 import type { PaymentMethod } from "@/types";
 
 const PAYMENT_OPTIONS: { value: PaymentMethod; label: string; hint: string }[] = [
@@ -98,7 +99,7 @@ export default function CheckoutPage() {
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
@@ -109,7 +110,7 @@ export default function CheckoutPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="03XX-XXXXXXX"
-              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
@@ -119,7 +120,7 @@ export default function CheckoutPage() {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               rows={2}
-              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
@@ -128,7 +129,7 @@ export default function CheckoutPage() {
               required
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
@@ -137,7 +138,7 @@ export default function CheckoutPage() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
+              className={INPUT_CLASS}
             />
           </label>
 
