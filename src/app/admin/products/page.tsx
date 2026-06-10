@@ -7,14 +7,22 @@ import toast from "react-hot-toast";
 import clsx from "clsx";
 import { Pencil, Trash2 } from "lucide-react";
 import { deleteProduct, listAllProducts } from "@/lib/products";
+import { listCategories } from "@/lib/categories";
 import { formatPrice } from "@/lib/format";
-import type { Product } from "@/types";
+import type { Category, Product } from "@/types";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[] | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   async function refresh() {
-    setProducts(await listAllProducts());
+    const [productList, categoryList] = await Promise.all([listAllProducts(), listCategories()]);
+    setProducts(productList);
+    setCategories(categoryList);
+  }
+
+  function categoryName(categoryId: string): string {
+    return categories.find((c) => c.id === categoryId)?.name ?? "Uncategorized";
   }
 
   useEffect(() => {
@@ -60,7 +68,7 @@ export default function AdminProductsPage() {
               <div className="flex-1">
                 <p className="text-sm font-medium">{product.name}</p>
                 <p className="text-xs text-black/50 capitalize">
-                  {product.category} · stock: {product.stock}
+                  {categoryName(product.categoryId)} · stock: {product.stock}
                 </p>
               </div>
               <span className={clsx("rounded-full px-2 py-1 text-xs font-medium", product.active ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" : "bg-black/10 text-black/50 dark:bg-white/10")}>

@@ -27,7 +27,7 @@ function toProduct(id: string, data: Record<string, unknown>): Product {
     description: data.description as string,
     price: data.price as number,
     compareAtPrice: data.compareAtPrice as number | undefined,
-    category: data.category as string,
+    categoryId: data.categoryId as string,
     images: (data.images as string[]) ?? [],
     stock: data.stock as number,
     active: data.active as boolean,
@@ -36,10 +36,10 @@ function toProduct(id: string, data: Record<string, unknown>): Product {
   };
 }
 
-export async function listActiveProducts(category?: string): Promise<Product[]> {
+export async function listActiveProducts(categoryId?: string): Promise<Product[]> {
   try {
     const constraints = [where("active", "==", true)];
-    if (category) constraints.push(where("category", "==", category));
+    if (categoryId) constraints.push(where("categoryId", "==", categoryId));
     const q = query(collection(getFirebaseDb(), PRODUCTS), ...constraints, orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
     return snap.docs.map((d) => toProduct(d.id, d.data()));
@@ -94,12 +94,4 @@ export async function updateProduct(id: string, input: Partial<ProductInput>): P
 
 export async function deleteProduct(id: string): Promise<void> {
   await deleteDoc(doc(getFirebaseDb(), PRODUCTS, id));
-}
-
-export function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
 }

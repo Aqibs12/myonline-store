@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Plus, X } from "lucide-react";
-import type { Product, ProductInput } from "@/types";
-import { createProduct, slugify, updateProduct } from "@/lib/products";
+import type { Category, Product, ProductInput } from "@/types";
+import { createProduct, updateProduct } from "@/lib/products";
+import { listCategories } from "@/lib/categories";
+import { slugify } from "@/lib/format";
 
 export function ProductForm({ product }: { product?: Product }) {
   const router = useRouter();
@@ -15,11 +17,19 @@ export function ProductForm({ product }: { product?: Product }) {
   const [description, setDescription] = useState(product?.description ?? "");
   const [price, setPrice] = useState(product?.price?.toString() ?? "");
   const [compareAtPrice, setCompareAtPrice] = useState(product?.compareAtPrice?.toString() ?? "");
-  const [category, setCategory] = useState(product?.category ?? "");
+  const [categoryId, setCategoryId] = useState(product?.categoryId ?? "");
+  const [categories, setCategories] = useState<Category[]>([]);
   const [stock, setStock] = useState(product?.stock?.toString() ?? "");
   const [active, setActive] = useState(product?.active ?? true);
   const [images, setImages] = useState<string[]>(product?.images.length ? product.images : [""]);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    listCategories().then((list) => {
+      setCategories(list);
+      setCategoryId((current) => current || list[0]?.id || "");
+    });
+  }, []);
 
   function updateImageUrl(index: number, url: string) {
     setImages((prev) => prev.map((u, i) => (i === index ? url : u)));
@@ -43,7 +53,7 @@ export function ProductForm({ product }: { product?: Product }) {
         description: description.trim(),
         price: Number(price),
         compareAtPrice: compareAtPrice ? Number(compareAtPrice) : undefined,
-        category: category.trim().toLowerCase(),
+        categoryId,
         images: images.map((url) => url.trim()).filter(Boolean),
         stock: Number(stock),
         active,
@@ -118,13 +128,26 @@ export function ProductForm({ product }: { product?: Product }) {
       <div className="grid grid-cols-2 gap-4">
         <label className="flex flex-col gap-1 text-sm font-medium">
           Category
-          <input
+          <select
             required
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="e.g. electronics"
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
             className="rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 dark:border-white/20"
-          />
+          >
+            <option value="" disabled>
+              Select a category
+            </option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          {categories.length === 0 && (
+            <span className="text-xs text-black/50">
+              No categories yet — add one in the Categories tab first.
+            </span>
+          )}
         </label>
         <label className="flex flex-col gap-1 text-sm font-medium">
           Stock quantity

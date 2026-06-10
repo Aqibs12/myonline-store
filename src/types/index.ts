@@ -1,3 +1,11 @@
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export type CategoryInput = Omit<Category, "id">;
+
 export interface Product {
   id: string;
   name: string;
@@ -5,7 +13,7 @@ export interface Product {
   description: string;
   price: number;
   compareAtPrice?: number;
-  category: string;
+  categoryId: string;
   images: string[];
   stock: number;
   active: boolean;
@@ -14,6 +22,13 @@ export interface Product {
 }
 
 export type ProductInput = Omit<Product, "id" | "createdAt" | "updatedAt">;
+
+export interface UserProfile {
+  uid: string;
+  email: string | null;
+  role: "owner" | "customer";
+  createdAt: number;
+}
 
 export interface CartItem {
   productId: string;

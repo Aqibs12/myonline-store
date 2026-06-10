@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getProductBySlug } from "@/lib/products";
+import { listCategories } from "@/lib/categories";
 import { formatPrice } from "@/lib/format";
 import { AddToCartPanel } from "./add-to-cart-panel";
 
@@ -17,6 +18,9 @@ export default async function ProductDetailPage({
   if (!product || !product.active) {
     notFound();
   }
+
+  const categories = await listCategories();
+  const categoryName = categories.find((c) => c.id === product.categoryId)?.name ?? "Uncategorized";
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -49,7 +53,7 @@ export default async function ProductDetailPage({
 
         <div className="flex flex-col gap-3">
           <span className="w-fit rounded-full bg-black/5 px-2.5 py-1 text-xs font-medium capitalize text-black/60 dark:bg-white/10 dark:text-white/60">
-            {product.category}
+            {categoryName}
           </span>
           <h1 className="text-2xl font-bold">{product.name}</h1>
           <div className="flex items-center gap-3">

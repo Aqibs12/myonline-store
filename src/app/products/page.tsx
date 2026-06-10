@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import clsx from "clsx";
 import { listActiveProducts } from "@/lib/products";
+import { listCategories } from "@/lib/categories";
 import { ProductCard } from "@/components/product-card";
 
 export default async function ProductsPage({
@@ -11,9 +12,7 @@ export default async function ProductsPage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const { category } = await searchParams;
-  const products = await listActiveProducts(category);
-  const allProducts = category ? await listActiveProducts() : products;
-  const categories = Array.from(new Set(allProducts.map((p) => p.category))).sort();
+  const [products, categories] = await Promise.all([listActiveProducts(category), listCategories()]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -34,16 +33,16 @@ export default async function ProductsPage({
           </Link>
           {categories.map((c) => (
             <Link
-              key={c}
-              href={`/products?category=${encodeURIComponent(c)}`}
+              key={c.id}
+              href={`/products?category=${encodeURIComponent(c.id)}`}
               className={clsx(
                 "rounded-full border px-3 py-1.5 text-sm font-medium capitalize transition",
-                category === c
+                category === c.id
                   ? "border-orange-600 bg-orange-600 text-white"
                   : "border-black/15 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
               )}
             >
-              {c}
+              {c.name}
             </Link>
           ))}
         </div>
