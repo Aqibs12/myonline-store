@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { useCartStore } from "@/lib/cart-store";
 import { createOrder } from "@/lib/orders";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, SHIPPING_FEE } from "@/lib/format";
 import { inputClass } from "@/lib/ui";
 import { validateCheckoutForm, type CheckoutFieldErrors } from "@/lib/validation";
 import type { PaymentMethod } from "@/types";
@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const items = useCartStore((s) => s.items);
   const subtotal = useCartStore((s) => s.subtotal());
+  const total = subtotal + SHIPPING_FEE;
   const clear = useCartStore((s) => s.clear);
 
   const [fullName, setFullName] = useState("");
@@ -81,7 +82,8 @@ export default function CheckoutPage() {
           image: i.image,
         })),
         subtotal,
-        total: subtotal,
+        shippingFee: SHIPPING_FEE,
+        total,
         paymentMethod,
         shippingAddress: { fullName, phone, address, city, notes: notes || undefined },
       });
@@ -197,7 +199,7 @@ export default function CheckoutPage() {
             disabled={submitting}
             className="mt-4 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-700 disabled:opacity-60"
           >
-            {submitting ? "Placing order..." : `Place order — ${formatPrice(subtotal)}`}
+            {submitting ? "Placing order..." : `Place order — ${formatPrice(total)}`}
           </button>
         </form>
 
@@ -213,9 +215,19 @@ export default function CheckoutPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-4 flex justify-between border-t border-black/10 pt-3 text-sm font-bold dark:border-white/10">
-            <span>Total</span>
-            <span>{formatPrice(subtotal)}</span>
+          <div className="mt-4 flex flex-col gap-1.5 border-t border-black/10 pt-3 text-sm dark:border-white/10">
+            <div className="flex justify-between text-black/70 dark:text-white/70">
+              <span>Subtotal</span>
+              <span>{formatPrice(subtotal)}</span>
+            </div>
+            <div className="flex justify-between text-black/70 dark:text-white/70">
+              <span>Standard Shipping</span>
+              <span>{formatPrice(SHIPPING_FEE)}</span>
+            </div>
+            <div className="flex justify-between border-t border-black/10 pt-1.5 font-bold dark:border-white/10">
+              <span>Total</span>
+              <span>{formatPrice(total)}</span>
+            </div>
           </div>
         </div>
       </div>

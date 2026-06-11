@@ -71,6 +71,7 @@ export interface Order {
   userEmail: string;
   items: OrderItem[];
   subtotal: number;
+  shippingFee: number;
   total: number;
   status: OrderStatus;
   paymentMethod: PaymentMethod;

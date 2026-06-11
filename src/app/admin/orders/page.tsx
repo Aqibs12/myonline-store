@@ -96,7 +96,15 @@ export default function AdminOrdersPage() {
                       <span>{formatPrice(item.price * item.quantity)}</span>
                     </li>
                   ))}
-                  <li className="mt-1 flex justify-between border-t border-black/10 pt-1 font-bold dark:border-white/10">
+                  <li className="mt-1 flex justify-between border-t border-black/10 pt-1 text-black/70 dark:border-white/10 dark:text-white/70">
+                    <span>Subtotal</span>
+                    <span>{formatPrice(order.subtotal)}</span>
+                  </li>
+                  <li className="flex justify-between text-black/70 dark:text-white/70">
+                    <span>Standard Shipping</span>
+                    <span>{formatPrice(order.shippingFee)}</span>
+                  </li>
+                  <li className="flex justify-between font-bold">
                     <span>Total ({order.paymentMethod.toUpperCase()})</span>
                     <span>{formatPrice(order.total)}</span>
                   </li>

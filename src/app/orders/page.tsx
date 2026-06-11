@@ -72,9 +72,19 @@ export default function OrdersPage() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-3 flex justify-between border-t border-black/10 pt-2 text-sm font-bold dark:border-white/10">
-                <span>Total ({order.paymentMethod.toUpperCase()})</span>
-                <span>{formatPrice(order.total)}</span>
+              <div className="mt-3 flex flex-col gap-1 border-t border-black/10 pt-2 text-sm dark:border-white/10">
+                <div className="flex justify-between text-black/70 dark:text-white/70">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(order.subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-black/70 dark:text-white/70">
+                  <span>Standard Shipping</span>
+                  <span>{formatPrice(order.shippingFee)}</span>
+                </div>
+                <div className="flex justify-between font-bold">
+                  <span>Total ({order.paymentMethod.toUpperCase()})</span>
+                  <span>{formatPrice(order.total)}</span>
+                </div>
               </div>
             </div>
           ))}

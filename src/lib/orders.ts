@@ -25,6 +25,7 @@ function toOrder(id: string, data: Record<string, unknown>): Order {
     userEmail: data.userEmail as string,
     items: data.items as Order["items"],
     subtotal: data.subtotal as number,
+    shippingFee: (data.shippingFee as number) ?? 0,
     total: data.total as number,
     status: data.status as OrderStatus,
     paymentMethod: data.paymentMethod as Order["paymentMethod"],

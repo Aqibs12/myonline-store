@@ -1,3 +1,5 @@
+export const SHIPPING_FEE = 199;
+
 export function formatPrice(amount: number): string {
   return new Intl.NumberFormat("en-PK", {
     style: "currency",
