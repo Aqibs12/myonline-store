@@ -16,6 +16,7 @@ import {
   validateSignInForm,
   type AuthFieldErrors,
 } from "@/lib/validation";
+import { inputClass } from "@/lib/ui";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -77,11 +78,6 @@ export default function LoginPage() {
       setSubmitting(false);
     }
   }
-
-  const inputClass = (hasError: boolean) =>
-    `rounded-lg border bg-transparent px-3 py-2 text-sm outline-none focus:border-orange-600 ${
-      hasError ? "border-red-500" : "border-black/15 dark:border-white/20"
-    }`;
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12">

@@ -49,3 +49,43 @@ export function validateSignInForm(email: string, password: string): AuthFieldEr
 
   return errors;
 }
+
+export interface CheckoutFieldErrors {
+  fullName?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+}
+
+// Pakistani mobile numbers: 03XXXXXXXXX, +923XXXXXXXXX, or 00923XXXXXXXXX
+const PK_MOBILE_RE = /^(?:\+92|0092|0)3\d{9}$/;
+
+export function validatePakistaniPhone(phone: string): string | undefined {
+  const cleaned = phone.replace(/[\s-]/g, "");
+  if (!cleaned) return "Phone number is required";
+  if (!PK_MOBILE_RE.test(cleaned)) {
+    return "Enter a valid Pakistani mobile number, e.g. 03XX-XXXXXXX";
+  }
+  return undefined;
+}
+
+export function validateCheckoutForm(
+  fullName: string,
+  phone: string,
+  address: string,
+  city: string
+): CheckoutFieldErrors {
+  const errors: CheckoutFieldErrors = {};
+
+  if (!fullName.trim()) errors.fullName = "Full name is required";
+
+  const phoneError = validatePakistaniPhone(phone);
+  if (phoneError) errors.phone = phoneError;
+
+  if (!address.trim()) errors.address = "Address is required";
+  else if (address.trim().length < 10) errors.address = "Enter your full address (house/street, area)";
+
+  if (!city.trim()) errors.city = "City is required";
+
+  return errors;
+}

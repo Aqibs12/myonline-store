@@ -8,7 +8,8 @@ import { useAuth } from "@/lib/auth-context";
 import { useCartStore } from "@/lib/cart-store";
 import { createOrder } from "@/lib/orders";
 import { formatPrice } from "@/lib/format";
-import { INPUT_CLASS } from "@/lib/ui";
+import { inputClass } from "@/lib/ui";
+import { validateCheckoutForm, type CheckoutFieldErrors } from "@/lib/validation";
 import type { PaymentMethod } from "@/types";
 
 const PAYMENT_OPTIONS: { value: PaymentMethod; label: string; hint: string }[] = [
@@ -30,6 +31,7 @@ export default function CheckoutPage() {
   const [city, setCity] = useState("");
   const [notes, setNotes] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
+  const [errors, setErrors] = useState<CheckoutFieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
   if (!loading && !user) {
@@ -58,6 +60,14 @@ export default function CheckoutPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!user) return;
+
+    const fieldErrors = validateCheckoutForm(fullName, phone, address, city);
+    if (Object.keys(fieldErrors).length > 0) {
+      setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
+
     setSubmitting(true);
     try {
       const orderId = await createOrder({
@@ -91,46 +101,63 @@ export default function CheckoutPage() {
       <h1 className="text-2xl font-bold">Checkout</h1>
 
       <div className="mt-6 grid gap-8 md:grid-cols-[1.2fr_1fr]">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">Shipping details</h2>
           <label className="flex flex-col gap-1 text-sm font-medium">
             Full name
             <input
-              required
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className={INPUT_CLASS}
+              onChange={(e) => {
+                setFullName(e.target.value);
+                if (errors.fullName) setErrors((prev) => ({ ...prev, fullName: undefined }));
+              }}
+              className={inputClass(Boolean(errors.fullName))}
             />
+            {errors.fullName && <span className="text-xs text-red-500">{errors.fullName}</span>}
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
             Phone number
             <input
-              required
               type="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
+              }}
               placeholder="03XX-XXXXXXX"
-              className={INPUT_CLASS}
+              className={inputClass(Boolean(errors.phone))}
             />
+            {errors.phone ? (
+              <span className="text-xs text-red-500">{errors.phone}</span>
+            ) : (
+              <span className="text-xs text-black/40">We currently only deliver within Pakistan.</span>
+            )}
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
             Address
             <textarea
-              required
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={(e) => {
+                setAddress(e.target.value);
+                if (errors.address) setErrors((prev) => ({ ...prev, address: undefined }));
+              }}
               rows={2}
-              className={INPUT_CLASS}
+              placeholder="House #, street, area"
+              className={inputClass(Boolean(errors.address))}
             />
+            {errors.address && <span className="text-xs text-red-500">{errors.address}</span>}
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
             City
             <input
-              required
               value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className={INPUT_CLASS}
+              onChange={(e) => {
+                setCity(e.target.value);
+                if (errors.city) setErrors((prev) => ({ ...prev, city: undefined }));
+              }}
+              className={inputClass(Boolean(errors.city))}
             />
+            {errors.city && <span className="text-xs text-red-500">{errors.city}</span>}
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
             Order notes (optional)
@@ -138,7 +165,7 @@ export default function CheckoutPage() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              className={INPUT_CLASS}
+              className={inputClass()}
             />
           </label>
 
