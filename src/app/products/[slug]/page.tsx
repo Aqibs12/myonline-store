@@ -1,11 +1,11 @@
 export const dynamic = "force-dynamic";
 
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { getProductBySlug } from "@/lib/products";
 import { listCategories } from "@/lib/categories";
 import { formatPrice } from "@/lib/format";
 import { AddToCartPanel } from "./add-to-cart-panel";
+import { ProductGallery } from "./product-gallery";
 
 export default async function ProductDetailPage({
   params,
@@ -25,31 +25,7 @@ export default async function ProductDetailPage({
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <div className="grid gap-8 md:grid-cols-2">
-        <div className="flex flex-col gap-3">
-          <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-black/5 dark:bg-white/10">
-            {product.images[0] ? (
-              <Image
-                src={product.images[0]}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-                priority
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm text-black/40">No image</div>
-            )}
-          </div>
-          {product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.slice(1, 5).map((img) => (
-                <div key={img} className="relative aspect-square overflow-hidden rounded-lg bg-black/5 dark:bg-white/10">
-                  <Image src={img} alt={product.name} fill sizes="120px" className="object-cover" />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductGallery images={product.images} name={product.name} />
 
         <div className="flex flex-col gap-3">
           <span className="w-fit rounded-full bg-black/5 px-2.5 py-1 text-xs font-medium capitalize text-black/60 dark:bg-white/10 dark:text-white/60">

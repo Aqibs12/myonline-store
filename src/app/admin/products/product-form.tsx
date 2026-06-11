@@ -22,7 +22,9 @@ export function ProductForm({ product }: { product?: Product }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [stock, setStock] = useState(product?.stock?.toString() ?? "");
   const [active, setActive] = useState(product?.active ?? true);
-  const [images, setImages] = useState<string[]>(product?.images.length ? product.images : [""]);
+  const [images, setImages] = useState<string[]>(
+    product?.images.length ? product.images.slice(0, 3) : [""]
+  );
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export function ProductForm({ product }: { product?: Product }) {
   }
 
   function addImageField() {
-    setImages((prev) => [...prev, ""]);
+    setImages((prev) => (prev.length < 3 ? [...prev, ""] : prev));
   }
 
   function removeImageField(index: number) {
@@ -170,14 +172,15 @@ export function ProductForm({ product }: { product?: Product }) {
       </label>
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium">Image URLs</span>
+        <span className="text-sm font-medium">Product images</span>
         <p className="text-xs text-black/50">
-          Host your photos anywhere (e.g. imgbb.com, Cloudinary, Google Photos share link) and paste the direct image URL below. The first image is used as the main product photo.
+          Add 1–3 photos. Host them anywhere (e.g. imgbb.com, Cloudinary, Google Photos share link) and paste the direct image URL below. The first photo is required and is used as the main product image; customers can slide through the rest on the product page.
         </p>
         {images.map((url, index) => (
           <div key={index} className="flex items-center gap-2">
             <input
               type="url"
+              required={index === 0}
               value={url}
               onChange={(e) => updateImageUrl(index, e.target.value)}
               placeholder="https://example.com/photo.jpg"
@@ -195,14 +198,16 @@ export function ProductForm({ product }: { product?: Product }) {
             )}
           </div>
         ))}
-        <button
-          type="button"
-          onClick={addImageField}
-          className="flex w-fit items-center gap-1 rounded-lg border border-dashed border-black/20 px-3 py-1.5 text-xs font-medium text-black/60 hover:bg-black/5 dark:border-white/20 dark:text-white/60 dark:hover:bg-white/10"
-        >
-          <Plus size={14} />
-          Add another image
-        </button>
+        {images.length < 3 && (
+          <button
+            type="button"
+            onClick={addImageField}
+            className="flex w-fit items-center gap-1 rounded-lg border border-dashed border-black/20 px-3 py-1.5 text-xs font-medium text-black/60 hover:bg-black/5 dark:border-white/20 dark:text-white/60 dark:hover:bg-white/10"
+          >
+            <Plus size={14} />
+            Add another image
+          </button>
+        )}
       </div>
 
       <button
