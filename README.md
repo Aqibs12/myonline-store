@@ -60,17 +60,7 @@ These rules ensure:
 - Signed-in customers can place orders and see only their own orders; only the owner can update order status.
 - Each user can read/create their own `users/{uid}` profile; only the owner can read or manage other users' profiles.
 
-## 4. Required Firestore indexes
-
-Create these composite indexes (Firestore > Indexes > Composite):
-
-| Collection | Fields |
-| ---------- | ------ |
-| `products` | `active` (Asc), `createdAt` (Desc) |
-| `products` | `active` (Asc), `categoryId` (Asc), `createdAt` (Desc) |
-| `orders` | `userId` (Asc), `createdAt` (Desc) |
-
-## 5. Run locally
+## 4. Run locally
 
 ```bash
 npm install
@@ -84,7 +74,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - From `/admin/products`, add your first products (with images, price, stock, and a category).
 - Customers can browse `/products`, filter by category, add items to their cart, and check out with **Cash on Delivery**, **JazzCash**, or **Easypaisa** (the latter two are recorded for manual confirmation — wire up a real payment gateway later if needed).
 
-## 6. Deploy to Vercel
+## 5. Deploy to Vercel
 
 1. Push this repo to GitHub.
 2. Import it into [Vercel](https://vercel.com/new).

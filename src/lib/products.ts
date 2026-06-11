@@ -40,9 +40,9 @@ export async function listActiveProducts(categoryId?: string): Promise<Product[]
   try {
     const constraints = [where("active", "==", true)];
     if (categoryId) constraints.push(where("categoryId", "==", categoryId));
-    const q = query(collection(getFirebaseDb(), PRODUCTS), ...constraints, orderBy("createdAt", "desc"));
+    const q = query(collection(getFirebaseDb(), PRODUCTS), ...constraints);
     const snap = await getDocs(q);
-    return snap.docs.map((d) => toProduct(d.id, d.data()));
+    return snap.docs.map((d) => toProduct(d.id, d.data())).sort((a, b) => b.createdAt - a.createdAt);
   } catch (error) {
     // The storefront must keep rendering even if Firestore isn't reachable yet
     // (e.g. the database hasn't been created or security rules aren't deployed).

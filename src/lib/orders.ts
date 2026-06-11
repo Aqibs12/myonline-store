@@ -45,9 +45,9 @@ export async function createOrder(input: OrderInput): Promise<string> {
 }
 
 export async function listOrdersForUser(userId: string): Promise<Order[]> {
-  const q = query(collection(getFirebaseDb(), ORDERS), where("userId", "==", userId), orderBy("createdAt", "desc"));
+  const q = query(collection(getFirebaseDb(), ORDERS), where("userId", "==", userId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => toOrder(d.id, d.data()));
+  return snap.docs.map((d) => toOrder(d.id, d.data())).sort((a, b) => b.createdAt - a.createdAt);
 }
 
 export async function listAllOrders(): Promise<Order[]> {
