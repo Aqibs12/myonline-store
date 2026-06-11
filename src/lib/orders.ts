@@ -35,9 +35,14 @@ function toOrder(id: string, data: Record<string, unknown>): Order {
   };
 }
 
+function stripUndefined<T extends object>(obj: T): Partial<T> {
+  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as Partial<T>;
+}
+
 export async function createOrder(input: OrderInput): Promise<string> {
   const ref = await addDoc(collection(getFirebaseDb(), ORDERS), {
     ...input,
+    shippingAddress: stripUndefined(input.shippingAddress),
     status: "pending" satisfies OrderStatus,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
