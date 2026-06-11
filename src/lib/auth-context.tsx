@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase";
 import { ensureUserProfile } from "@/lib/users";
+import { setCartUser } from "@/lib/cart-store";
 
 interface AuthContextValue {
   user: User | null;
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(getFirebaseAuth(), (u) => {
       setUser(u);
       setLoading(false);
+      setCartUser(u ? u.uid : null);
       if (u) {
         ensureUserProfile(u)
           .then((profile) => setIsOwner(profile.role === "owner"))
