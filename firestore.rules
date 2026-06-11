@@ -32,10 +32,14 @@ service cloud.firestore {
     }
 
     match /orders/{orderId} {
-      // Customers can create their own orders and read only their own; the owner can read/manage all.
-      allow create: if request.auth != null
-        && request.resource.data.userId == request.auth.uid
-        && request.resource.data.status == "pending";
+      // Signed-in customers can create orders tied to their account; guests can
+      // check out without an account using the fixed userId "guest". Either way,
+      // only the owner can read guest orders or another user's orders back.
+      allow create: if request.resource.data.status == "pending"
+        && (
+          (request.auth != null && request.resource.data.userId == request.auth.uid)
+          || (request.auth == null && request.resource.data.userId == "guest")
+        );
       allow read: if request.auth != null
         && (resource.data.userId == request.auth.uid || isOwner());
       // Only the owner can change order status after creation.

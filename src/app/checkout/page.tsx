@@ -35,18 +35,6 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<CheckoutFieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
-  if (!loading && !user) {
-    return (
-      <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 px-4 text-center">
-        <h1 className="text-2xl font-bold">Sign in to checkout</h1>
-        <p className="text-black/60 dark:text-white/60">Please sign in so we can save your order and let you track it.</p>
-        <Link href="/login" className="mt-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700">
-          Sign in
-        </Link>
-      </div>
-    );
-  }
-
   if (!loading && items.length === 0) {
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 px-4 text-center">
@@ -60,7 +48,6 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!user) return;
 
     const fieldErrors = validateCheckoutForm(fullName, phone, address, city);
     if (Object.keys(fieldErrors).length > 0) {
@@ -72,8 +59,8 @@ export default function CheckoutPage() {
     setSubmitting(true);
     try {
       const orderId = await createOrder({
-        userId: user.uid,
-        userEmail: user.email ?? "",
+        userId: user?.uid ?? "guest",
+        userEmail: user?.email ?? "",
         items: items.map((i) => ({
           productId: i.productId,
           name: i.name,
@@ -89,7 +76,7 @@ export default function CheckoutPage() {
       });
       clear();
       toast.success("Order placed!");
-      router.push(`/orders?placed=${orderId}`);
+      router.push(user ? `/orders?placed=${orderId}` : "/");
     } catch (error) {
       console.error(error);
       toast.error("Could not place order. Please try again.");
@@ -101,6 +88,16 @@ export default function CheckoutPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <h1 className="text-2xl font-bold">Checkout</h1>
+
+      {!loading && !user && (
+        <p className="mt-2 text-sm text-black/60 dark:text-white/60">
+          Checking out as a guest.{" "}
+          <Link href="/login" className="font-semibold text-orange-600 hover:underline">
+            Sign in
+          </Link>{" "}
+          to track this order in your account.
+        </p>
+      )}
 
       <div className="mt-6 grid gap-8 md:grid-cols-[1.2fr_1fr]">
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
