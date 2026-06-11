@@ -30,7 +30,10 @@ export default function CartPage() {
 
       <div className="mt-6 flex flex-col gap-4">
         {items.map((item) => (
-          <div key={item.productId} className="flex items-center gap-4 rounded-xl border border-black/10 p-3 dark:border-white/10">
+          <div
+            key={item.productId}
+            className="flex flex-wrap items-center gap-4 rounded-xl border border-black/10 p-3 dark:border-white/10 sm:flex-nowrap"
+          >
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-black/5 dark:bg-white/10">
               {item.image ? (
                 <Image src={item.image} alt={item.name} fill sizes="80px" className="object-cover" />
@@ -38,36 +41,38 @@ export default function CartPage() {
                 <div className="flex h-full w-full items-center justify-center text-xs text-black/40">No image</div>
               )}
             </div>
-            <div className="flex flex-1 flex-col gap-1">
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
               <span className="text-sm font-medium">{item.name}</span>
               <span className="text-sm text-black/60 dark:text-white/60">{formatPrice(item.price)}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end sm:gap-4">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setQuantity(item.productId, item.quantity - 1)}
+                  className="rounded-full border border-black/15 p-1.5 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus size={14} />
+                </button>
+                <span className="w-6 text-center text-sm font-medium">{item.quantity}</span>
+                <button
+                  onClick={() => setQuantity(item.productId, item.quantity + 1)}
+                  disabled={item.quantity >= item.stock}
+                  className="rounded-full border border-black/15 p-1.5 hover:bg-black/5 disabled:opacity-40 dark:border-white/20 dark:hover:bg-white/10"
+                  aria-label="Increase quantity"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
+              <span className="text-right text-sm font-semibold sm:w-24">{formatPrice(item.price * item.quantity)}</span>
               <button
-                onClick={() => setQuantity(item.productId, item.quantity - 1)}
-                className="rounded-full border border-black/15 p-1.5 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
-                aria-label="Decrease quantity"
+                onClick={() => removeItem(item.productId)}
+                className="rounded-full p-2 text-black/40 hover:bg-black/5 hover:text-red-600 dark:hover:bg-white/10"
+                aria-label="Remove item"
               >
-                <Minus size={14} />
-              </button>
-              <span className="w-6 text-center text-sm font-medium">{item.quantity}</span>
-              <button
-                onClick={() => setQuantity(item.productId, item.quantity + 1)}
-                disabled={item.quantity >= item.stock}
-                className="rounded-full border border-black/15 p-1.5 hover:bg-black/5 disabled:opacity-40 dark:border-white/20 dark:hover:bg-white/10"
-                aria-label="Increase quantity"
-              >
-                <Plus size={14} />
+                <Trash2 size={16} />
               </button>
             </div>
-            <span className="w-24 text-right text-sm font-semibold">{formatPrice(item.price * item.quantity)}</span>
-            <button
-              onClick={() => removeItem(item.productId)}
-              className="rounded-full p-2 text-black/40 hover:bg-black/5 hover:text-red-600 dark:hover:bg-white/10"
-              aria-label="Remove item"
-            >
-              <Trash2 size={16} />
-            </button>
           </div>
         ))}
       </div>
