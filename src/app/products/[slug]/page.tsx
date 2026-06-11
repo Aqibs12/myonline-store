@@ -71,7 +71,7 @@ export default async function ProductDetailPage({
             <ul className="mt-1 list-inside list-disc space-y-1">
               <li>Cash on Delivery available nationwide</li>
               <li>JazzCash & Easypaisa accepted</li>
-              <li>Orders are usually dispatched within 1–2 business days</li>
+              <li>Orders are usually dispatched within 4–5 business days</li>
             </ul>
           </div>
         </div>
