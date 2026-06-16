@@ -16,6 +16,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useCartStore } from "@/lib/cart-store";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { useAuthDrawerStore } from "@/lib/auth-drawer-store";
+import { useCartDrawerStore } from "@/lib/cart-drawer-store";
 import { logOut } from "@/lib/auth";
 import { listCategories } from "@/lib/categories";
 
@@ -32,6 +33,7 @@ export function Navbar() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [accountOpen, setAccountOpen] = useState(false);
   const openAuthDrawer = useAuthDrawerStore((s) => s.open);
+  const openCartDrawer = useCartDrawerStore((s) => s.open);
 
   useEffect(() => {
     if (drawerOpen) {
@@ -79,8 +81,8 @@ export function Navbar() {
             >
               <Search size={22} />
             </Link>
-            <Link
-              href="/cart"
+            <button
+              onClick={openCartDrawer}
               className="relative rounded-full p-1.5 hover:bg-black/5 dark:hover:bg-white/10"
               aria-label="Cart"
             >
@@ -90,7 +92,7 @@ export function Navbar() {
                   {totalQuantity}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -190,8 +192,8 @@ export function Navbar() {
             </Link>
 
             {/* Cart */}
-            <Link
-              href="/cart"
+            <button
+              onClick={openCartDrawer}
               aria-label="Cart"
               className="relative rounded-full p-2 transition hover:bg-black/5 dark:hover:bg-white/10"
             >
@@ -201,7 +203,7 @@ export function Navbar() {
                   {totalQuantity}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
       </header>
