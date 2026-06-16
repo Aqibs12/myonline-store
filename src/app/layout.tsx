@@ -5,6 +5,8 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { AnnouncementBar } from "@/components/announcement-bar";
+import { BottomNav } from "@/components/bottom-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,12 +35,17 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         <AuthProvider>
+          <AnnouncementBar />
           <Navbar />
-          <main className="flex-1">{children}</main>
+          {/* pb-16 md:pb-0 leaves room for the fixed bottom nav on mobile */}
+          <main className="flex-1 pb-16 md:pb-0">{children}</main>
           <Footer />
-          <Toaster position="bottom-center" />
+          {/* Spacer so footer content isn't hidden behind the fixed bottom nav */}
+          <div className="h-16 md:hidden" aria-hidden />
+          <BottomNav />
+          <Toaster position="bottom-center" containerStyle={{ bottom: "72px" }} />
         </AuthProvider>
       </body>
     </html>
