@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Truck, RotateCcw, Shield, Headphones } from "lucide-react";
 import { listActiveProducts } from "@/lib/products";
 import { ProductCard } from "@/components/product-card";
+import { Testimonials } from "@/components/testimonials";
 
 const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "My Online Store";
 
@@ -110,6 +111,8 @@ export default async function Home() {
           </div>
         )}
       </section>
+
+      <Testimonials />
     </div>
   );
 }
