@@ -61,7 +61,9 @@ export interface ShippingAddress {
   fullName: string;
   phone: string;
   address: string;
+  apartment?: string;
   city: string;
+  postalCode?: string;
   notes?: string;
 }
 

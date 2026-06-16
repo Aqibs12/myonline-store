@@ -51,7 +51,7 @@ export function validateSignInForm(email: string, password: string): AuthFieldEr
 }
 
 export interface CheckoutFieldErrors {
-  fullName?: string;
+  lastName?: string;
   phone?: string;
   address?: string;
   city?: string;
@@ -70,20 +70,20 @@ export function validatePakistaniPhone(phone: string): string | undefined {
 }
 
 export function validateCheckoutForm(
-  fullName: string,
+  lastName: string,
   phone: string,
   address: string,
   city: string
 ): CheckoutFieldErrors {
   const errors: CheckoutFieldErrors = {};
 
-  if (!fullName.trim()) errors.fullName = "Full name is required";
+  if (!lastName.trim()) errors.lastName = "Last name is required";
 
   const phoneError = validatePakistaniPhone(phone);
   if (phoneError) errors.phone = phoneError;
 
   if (!address.trim()) errors.address = "Address is required";
-  else if (address.trim().length < 10) errors.address = "Enter your full address (house/street, area)";
+  else if (address.trim().length < 5) errors.address = "Enter your full address";
 
   if (!city.trim()) errors.city = "City is required";
 
