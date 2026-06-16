@@ -8,11 +8,13 @@ import toast from "react-hot-toast";
 import type { Product } from "@/types";
 import { formatPrice } from "@/lib/format";
 import { useCartStore } from "@/lib/cart-store";
+import { useCartDrawerStore } from "@/lib/cart-drawer-store";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { QuickViewModal } from "@/components/quick-view-modal";
 
 export function ProductCard({ product }: { product: Product }) {
   const addItem = useCartStore((s) => s.addItem);
+  const openDrawer = useCartDrawerStore((s) => s.open);
   const toggle = useWishlistStore((s) => s.toggle);
   const isWishlisted = useWishlistStore((s) => s.isWishlisted(product.id));
   const [showQuickView, setShowQuickView] = useState(false);
@@ -101,7 +103,7 @@ export function ProductCard({ product }: { product: Product }) {
             disabled={outOfStock}
             onClick={() => {
               addItem(product, 1);
-              toast.success(`${product.name} added to cart`);
+              openDrawer();
             }}
             className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-green-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-black/20"
           >

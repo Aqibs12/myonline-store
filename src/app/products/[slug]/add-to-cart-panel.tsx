@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
-import toast from "react-hot-toast";
 import type { Product } from "@/types";
 import { useCartStore } from "@/lib/cart-store";
+import { useCartDrawerStore } from "@/lib/cart-drawer-store";
 
 export function AddToCartPanel({ product }: { product: Product }) {
   const addItem = useCartStore((s) => s.addItem);
+  const openDrawer = useCartDrawerStore((s) => s.open);
   const [quantity, setQuantity] = useState(1);
   const outOfStock = product.stock <= 0;
 
@@ -35,7 +36,7 @@ export function AddToCartPanel({ product }: { product: Product }) {
         disabled={outOfStock}
         onClick={() => {
           addItem(product, quantity);
-          toast.success(`${product.name} added to cart`);
+          openDrawer();
         }}
         className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-black/20"
       >
