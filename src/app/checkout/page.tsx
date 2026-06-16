@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -25,6 +25,7 @@ export default function CheckoutPage() {
   const subtotal = useCartStore((s) => s.subtotal());
   const clear = useCartStore((s) => s.clear);
 
+  const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -40,6 +41,11 @@ export default function CheckoutPage() {
   const [couponError, setCouponError] = useState("");
 
   const total = subtotal + SHIPPING_FEE - couponDiscount;
+
+  // Pre-fill email from signed-in user
+  useEffect(() => {
+    if (user?.email) setEmail(user.email);
+  }, [user]);
 
   function handleApplyCoupon() {
     const code = couponCode.trim().toUpperCase();
@@ -73,9 +79,9 @@ export default function CheckoutPage() {
 
     setSubmitting(true);
     try {
-      const orderId = await createOrder({
+      const { id: orderId, trackingNumber } = await createOrder({
         userId: user?.uid ?? "guest",
-        userEmail: user?.email ?? "",
+        userEmail: email || user?.email || "",
         items: items.map((i) => ({
           productId: i.productId,
           name: i.name,
@@ -89,8 +95,36 @@ export default function CheckoutPage() {
         paymentMethod,
         shippingAddress: { fullName, phone, address, city, notes: notes || undefined },
       });
+
       clear();
-      toast.success("Order placed!");
+
+      // Send confirmation email (fire-and-forget — don't block order success)
+      const to = email || user?.email;
+      if (to) {
+        fetch("/api/send-order-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to,
+            orderId,
+            trackingNumber,
+            items: items.map((i) => ({
+              productId: i.productId,
+              name: i.name,
+              price: i.price,
+              quantity: i.quantity,
+              image: i.image,
+            })),
+            subtotal,
+            shippingFee: SHIPPING_FEE,
+            total,
+            paymentMethod,
+            shippingAddress: { fullName, phone, address, city, notes: notes || undefined },
+          }),
+        }).catch(() => {/* email failure is non-fatal */});
+      }
+
+      toast.success("Order placed! Check your email for confirmation.");
       router.push(user ? `/orders?placed=${orderId}` : "/");
     } catch (error) {
       console.error(error);
@@ -98,25 +132,46 @@ export default function CheckoutPage() {
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <h1 className="text-2xl font-bold">Checkout</h1>
 
-      {!loading && !user && (
-        <p className="mt-2 text-sm text-black/60 dark:text-white/60">
-          Checking out as a guest.{" "}
-          <Link href="/login" className="font-semibold text-teal-700 hover:underline">
-            Sign in
-          </Link>{" "}
-          to track this order in your account.
-        </p>
-      )}
-
       <div className="mt-6 grid gap-8 md:grid-cols-[1.2fr_1fr]">
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">Shipping details</h2>
+
+          {/* Contact */}
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">Contact</h2>
+          <label className="flex flex-col gap-1 text-sm font-medium">
+            Email address
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              readOnly={Boolean(user?.email)}
+              className={`${inputClass()} ${user?.email ? "cursor-default opacity-70" : ""}`}
+            />
+            <span className="text-xs text-black/40">
+              {user?.email
+                ? "Confirmation will be sent to your account email."
+                : "We'll send your order confirmation here (optional)."}
+            </span>
+          </label>
+
+          {!loading && !user && (
+            <p className="text-sm text-black/60 dark:text-white/60">
+              Checking out as a guest.{" "}
+              <Link href="/login" className="font-semibold text-teal-700 hover:underline">
+                Sign in
+              </Link>{" "}
+              to track this order in your account.
+            </p>
+          )}
+
+          {/* Shipping */}
+          <h2 className="mt-2 text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">Shipping details</h2>
           <label className="flex flex-col gap-1 text-sm font-medium">
             Full name
             <input
@@ -227,6 +282,7 @@ export default function CheckoutPage() {
               </li>
             ))}
           </ul>
+
           {/* Discount code */}
           <div className="mt-4 border-t border-black/10 pt-4 dark:border-white/10">
             {couponApplied ? (

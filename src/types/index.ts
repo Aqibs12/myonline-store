@@ -76,8 +76,9 @@ export interface Order {
   status: OrderStatus;
   paymentMethod: PaymentMethod;
   shippingAddress: ShippingAddress;
+  trackingNumber: string;
   createdAt: number;
   updatedAt: number;
 }
 
-export type OrderInput = Omit<Order, "id" | "createdAt" | "updatedAt" | "status">;
+export type OrderInput = Omit<Order, "id" | "createdAt" | "updatedAt" | "status" | "trackingNumber">;

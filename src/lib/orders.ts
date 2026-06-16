@@ -30,6 +30,7 @@ function toOrder(id: string, data: Record<string, unknown>): Order {
     status: data.status as OrderStatus,
     paymentMethod: data.paymentMethod as Order["paymentMethod"],
     shippingAddress: data.shippingAddress as Order["shippingAddress"],
+    trackingNumber: (data.trackingNumber as string) ?? "",
     createdAt: createdAt?.toMillis() ?? Date.now(),
     updatedAt: updatedAt?.toMillis() ?? Date.now(),
   };
@@ -39,15 +40,26 @@ function stripUndefined<T extends object>(obj: T): Partial<T> {
   return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as Partial<T>;
 }
 
-export async function createOrder(input: OrderInput): Promise<string> {
+function generateTrackingNumber(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `TRK-${code.slice(0, 4)}-${code.slice(4)}`;
+}
+
+export async function createOrder(input: OrderInput): Promise<{ id: string; trackingNumber: string }> {
+  const trackingNumber = generateTrackingNumber();
   const ref = await addDoc(collection(getFirebaseDb(), ORDERS), {
     ...input,
     shippingAddress: stripUndefined(input.shippingAddress),
+    trackingNumber,
     status: "pending" satisfies OrderStatus,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
-  return ref.id;
+  return { id: ref.id, trackingNumber };
 }
 
 export async function listOrdersForUser(userId: string): Promise<Order[]> {
