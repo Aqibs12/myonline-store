@@ -22,7 +22,7 @@ export function BottomNav() {
           href="/products"
           className={clsx(
             "flex flex-col items-center gap-1 py-3 text-xs font-medium transition",
-            pathname === "/products" ? "text-green-600" : "text-black/55 dark:text-white/55"
+            pathname === "/products" ? "text-teal-700" : "text-black/55 dark:text-white/55"
           )}
         >
           <ShoppingBag size={20} />
@@ -34,13 +34,13 @@ export function BottomNav() {
           href="/wishlist"
           className={clsx(
             "flex flex-col items-center gap-1 py-3 text-xs font-medium transition",
-            pathname === "/wishlist" ? "text-green-600" : "text-black/55 dark:text-white/55"
+            pathname === "/wishlist" ? "text-teal-700" : "text-black/55 dark:text-white/55"
           )}
         >
           <div className="relative">
             <Heart size={20} />
             {wishlistCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-600 px-0.5 text-[10px] font-bold text-white">
+              <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-teal-700 px-0.5 text-[10px] font-bold text-white">
                 {wishlistCount}
               </span>
             )}
@@ -53,13 +53,13 @@ export function BottomNav() {
           href="/cart"
           className={clsx(
             "flex flex-col items-center gap-1 py-3 text-xs font-medium transition",
-            pathname === "/cart" ? "text-green-600" : "text-black/55 dark:text-white/55"
+            pathname === "/cart" ? "text-teal-700" : "text-black/55 dark:text-white/55"
           )}
         >
           <div className="relative">
             <ShoppingCart size={20} />
             {totalQuantity > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-600 px-0.5 text-[10px] font-bold text-white">
+              <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-teal-700 px-0.5 text-[10px] font-bold text-white">
                 {totalQuantity}
               </span>
             )}
@@ -73,7 +73,7 @@ export function BottomNav() {
           className={clsx(
             "flex flex-col items-center gap-1 py-3 text-xs font-medium transition",
             pathname === "/login" || pathname === "/orders"
-              ? "text-green-600"
+              ? "text-teal-700"
               : "text-black/55 dark:text-white/55"
           )}
         >

@@ -38,7 +38,7 @@ export function AddToCartPanel({ product }: { product: Product }) {
           addItem(product, quantity);
           openDrawer();
         }}
-        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-black/20"
+        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-black/20"
       >
         <ShoppingCart size={16} />
         {outOfStock ? "Out of stock" : "Add to cart"}

@@ -14,7 +14,7 @@ export default function ContactPage() {
           </p>
           <a
             href="mailto:shop@myonlinestore.pk"
-            className="mt-3 inline-block text-sm font-medium text-green-600 hover:underline"
+            className="mt-3 inline-block text-sm font-medium text-teal-700 hover:underline"
           >
             shop@myonlinestore.pk
           </a>
@@ -27,7 +27,7 @@ export default function ContactPage() {
           </p>
           <a
             href="tel:+923000000000"
-            className="mt-3 inline-block text-sm font-medium text-green-600 hover:underline"
+            className="mt-3 inline-block text-sm font-medium text-teal-700 hover:underline"
           >
             +92-300-0000000
           </a>
@@ -43,8 +43,8 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="mt-8 rounded-xl bg-green-50 p-6 dark:bg-green-900/20">
-        <p className="text-sm text-green-800 dark:text-green-300">
+      <div className="mt-8 rounded-xl bg-teal-50 p-6 dark:bg-teal-900/20">
+        <p className="text-sm text-teal-800 dark:text-teal-300">
           <strong>Business hours:</strong> We respond to all inquiries within 24 hours. For urgent
           matters, please call or WhatsApp us directly.
         </p>

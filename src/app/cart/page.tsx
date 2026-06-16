@@ -17,7 +17,7 @@ export default function CartPage() {
       <div className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center gap-3 px-4 text-center">
         <h1 className="text-2xl font-bold">Your cart is empty</h1>
         <p className="text-black/60 dark:text-white/60">Browse our products and add something you like.</p>
-        <Link href="/products" className="mt-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
+        <Link href="/products" className="mt-2 rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">
           Start shopping
         </Link>
       </div>
@@ -85,7 +85,7 @@ export default function CartPage() {
         <p className="text-xs text-black/40">Shipping & payment options shown at checkout.</p>
         <Link
           href="/checkout"
-          className="mt-2 rounded-lg bg-green-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-700"
+          className="mt-2 rounded-lg bg-teal-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-teal-800"
         >
           Proceed to checkout
         </Link>

@@ -12,7 +12,7 @@ const STATUS_STYLES: Record<OrderStatus, string> = {
   pending: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
   confirmed: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
   shipped: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-  delivered: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+  delivered: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300",
   cancelled: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
 };
 
@@ -29,7 +29,7 @@ export default function OrdersPage() {
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 px-4 text-center">
         <h1 className="text-2xl font-bold">Sign in to view your orders</h1>
-        <Link href="/login" className="mt-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
+        <Link href="/login" className="mt-2 rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">
           Sign in
         </Link>
       </div>
@@ -45,7 +45,7 @@ export default function OrdersPage() {
       ) : orders.length === 0 ? (
         <div className="mt-6 flex flex-col items-start gap-3">
           <p className="text-black/60 dark:text-white/60">You haven&apos;t placed any orders yet.</p>
-          <Link href="/products" className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
+          <Link href="/products" className="rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">
             Browse products
           </Link>
         </div>

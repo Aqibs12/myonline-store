@@ -25,7 +25,7 @@ export default async function ProductsPage({
             className={clsx(
               "rounded-full border px-3 py-1.5 text-sm font-medium transition",
               !category
-                ? "border-green-600 bg-green-600 text-white"
+                ? "border-teal-700 bg-teal-700 text-white"
                 : "border-black/15 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
             )}
           >
@@ -38,7 +38,7 @@ export default async function ProductsPage({
               className={clsx(
                 "rounded-full border px-3 py-1.5 text-sm font-medium capitalize transition",
                 category === c.id
-                  ? "border-green-600 bg-green-600 text-white"
+                  ? "border-teal-700 bg-teal-700 text-white"
                   : "border-black/15 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
               )}
             >

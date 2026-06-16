@@ -93,7 +93,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
               aria-label={`Show image ${i + 1}`}
               className={clsx(
                 "relative aspect-square overflow-hidden rounded-lg bg-black/5 ring-2 transition dark:bg-white/10",
-                i === index ? "ring-green-600" : "ring-transparent"
+                i === index ? "ring-teal-700" : "ring-transparent"
               )}
             >
               <Image src={img} alt={name} fill sizes="120px" className="object-cover" />

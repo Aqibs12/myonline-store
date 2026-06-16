@@ -37,7 +37,7 @@ export default function WishlistPage() {
           </p>
           <Link
             href="/products"
-            className="rounded-full bg-green-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700"
+            className="rounded-full bg-teal-700 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
           >
             Browse products
           </Link>

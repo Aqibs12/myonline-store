@@ -13,7 +13,7 @@ const STATUS_STYLES: Record<OrderStatus, string> = {
   pending: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
   confirmed: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
   shipped: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-  delivered: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+  delivered: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300",
   cancelled: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
 };
 
@@ -64,7 +64,7 @@ export default function AdminOrdersPage() {
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order, e.target.value as OrderStatus)}
-                    className="rounded-lg border border-black/15 bg-transparent px-2 py-1.5 text-xs font-medium outline-none focus:border-green-600 dark:border-white/20"
+                    className="rounded-lg border border-black/15 bg-transparent px-2 py-1.5 text-xs font-medium outline-none focus:border-teal-700 dark:border-white/20"
                   >
                     {STATUSES.map((s) => (
                       <option key={s} value={s} className="text-black">

@@ -31,7 +31,7 @@ export default function AboutPage() {
       </div>
       <Link
         href="/products"
-        className="mt-8 inline-block rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
+        className="mt-8 inline-block rounded-full bg-teal-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal-800"
       >
         Shop now
       </Link>

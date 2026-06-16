@@ -178,7 +178,7 @@ export function QuickViewModal({
               onClose();
               openDrawer();
             }}
-            className="flex items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-black/20"
+            className="flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-black/20"
           >
             <ShoppingCart size={16} />
             {outOfStock ? "Out of stock" : "Add to cart"}
@@ -187,7 +187,7 @@ export function QuickViewModal({
           <Link
             href={`/products/${product.slug}`}
             onClick={onClose}
-            className="text-center text-sm font-medium text-green-600 hover:underline"
+            className="text-center text-sm font-medium text-teal-700 hover:underline"
           >
             View full details →
           </Link>

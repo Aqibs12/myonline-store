@@ -53,7 +53,7 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
             {TRUST_BADGES.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex flex-col items-center gap-2 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400">
                   <Icon size={22} />
                 </div>
                 <span className="text-sm font-semibold">{title}</span>
@@ -75,7 +75,7 @@ export default async function Home() {
           </div>
           <Link
             href="/products"
-            className="inline-flex items-center gap-1 text-sm font-medium text-green-600 hover:underline"
+            className="inline-flex items-center gap-1 text-sm font-medium text-teal-700 hover:underline"
           >
             View all <ArrowRight size={14} />
           </Link>

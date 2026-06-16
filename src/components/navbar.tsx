@@ -84,7 +84,7 @@ export function Navbar() {
             >
               <ShoppingCart size={22} />
               {totalQuantity > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-600 px-0.5 text-[10px] font-bold text-white">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-teal-700 px-0.5 text-[10px] font-bold text-white">
                   {totalQuantity}
                 </span>
               )}
@@ -99,25 +99,25 @@ export function Navbar() {
           </Link>
 
           <nav className="flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="hover:text-green-600">
+            <Link href="/" className="hover:text-teal-700">
               Home
             </Link>
-            <Link href="/products" className="hover:text-green-600">
+            <Link href="/products" className="hover:text-teal-700">
               All Products
             </Link>
-            <Link href="/about" className="hover:text-green-600">
+            <Link href="/about" className="hover:text-teal-700">
               About Us
             </Link>
-            <Link href="/contact" className="hover:text-green-600">
+            <Link href="/contact" className="hover:text-teal-700">
               Contact Us
             </Link>
             {user && (
-              <Link href="/orders" className="hover:text-green-600">
+              <Link href="/orders" className="hover:text-teal-700">
                 My Orders
               </Link>
             )}
             {isOwner && (
-              <Link href="/admin" className="flex items-center gap-1 hover:text-green-600">
+              <Link href="/admin" className="flex items-center gap-1 hover:text-teal-700">
                 <LayoutDashboard size={16} />
                 Dashboard
               </Link>
@@ -182,7 +182,7 @@ export function Navbar() {
             >
               <Heart size={20} />
               {wishlistCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-600 px-0.5 text-[10px] font-bold text-white">
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-teal-700 px-0.5 text-[10px] font-bold text-white">
                   {wishlistCount}
                 </span>
               )}
@@ -196,7 +196,7 @@ export function Navbar() {
             >
               <ShoppingCart size={20} />
               {totalQuantity > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-600 px-0.5 text-[10px] font-bold text-white">
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-teal-700 px-0.5 text-[10px] font-bold text-white">
                   {totalQuantity}
                 </span>
               )}
@@ -226,7 +226,7 @@ export function Navbar() {
               onClick={() => setActiveTab("menu")}
               className={`flex-1 py-4 text-xs font-bold uppercase tracking-widest transition ${
                 activeTab === "menu"
-                  ? "border-b-2 border-green-600 text-green-600"
+                  ? "border-b-2 border-teal-700 text-teal-700"
                   : "text-black/40 dark:text-white/40"
               }`}
             >
@@ -236,7 +236,7 @@ export function Navbar() {
               onClick={() => setActiveTab("categories")}
               className={`flex-1 py-4 text-xs font-bold uppercase tracking-widest transition ${
                 activeTab === "categories"
-                  ? "border-b-2 border-green-600 text-green-600"
+                  ? "border-b-2 border-teal-700 text-teal-700"
                   : "text-black/40 dark:text-white/40"
               }`}
             >
@@ -265,7 +265,7 @@ export function Navbar() {
                     key={item.href + item.label}
                     href={item.href}
                     onClick={closeDrawer}
-                    className="border-b border-black/5 px-5 py-4 text-sm font-medium hover:text-green-600 dark:border-white/10"
+                    className="border-b border-black/5 px-5 py-4 text-sm font-medium hover:text-teal-700 dark:border-white/10"
                   >
                     {item.label}
                   </Link>
@@ -274,7 +274,7 @@ export function Navbar() {
                   <Link
                     href="/orders"
                     onClick={closeDrawer}
-                    className="border-b border-black/5 px-5 py-4 text-sm font-medium hover:text-green-600 dark:border-white/10"
+                    className="border-b border-black/5 px-5 py-4 text-sm font-medium hover:text-teal-700 dark:border-white/10"
                   >
                     My Orders
                   </Link>
@@ -283,7 +283,7 @@ export function Navbar() {
                   <Link
                     href="/admin"
                     onClick={closeDrawer}
-                    className="flex items-center gap-2 border-b border-black/5 px-5 py-4 text-sm font-medium hover:text-green-600 dark:border-white/10"
+                    className="flex items-center gap-2 border-b border-black/5 px-5 py-4 text-sm font-medium hover:text-teal-700 dark:border-white/10"
                   >
                     <LayoutDashboard size={16} />
                     Dashboard
@@ -296,7 +296,7 @@ export function Navbar() {
                         closeDrawer();
                         logOut();
                       }}
-                      className="w-full px-5 py-4 text-left text-sm font-medium hover:text-green-600"
+                      className="w-full px-5 py-4 text-left text-sm font-medium hover:text-teal-700"
                     >
                       Sign out
                     </button>
@@ -304,7 +304,7 @@ export function Navbar() {
                     <Link
                       href="/login"
                       onClick={closeDrawer}
-                      className="block px-5 py-4 text-sm font-medium hover:text-green-600"
+                      className="block px-5 py-4 text-sm font-medium hover:text-teal-700"
                     >
                       Sign in
                     </Link>
@@ -323,7 +323,7 @@ export function Navbar() {
                       key={cat.id}
                       href={`/products?category=${encodeURIComponent(cat.id)}`}
                       onClick={closeDrawer}
-                      className="flex items-center justify-between border-b border-black/5 px-5 py-4 text-sm font-medium capitalize hover:text-green-600 dark:border-white/10"
+                      className="flex items-center justify-between border-b border-black/5 px-5 py-4 text-sm font-medium capitalize hover:text-teal-700 dark:border-white/10"
                     >
                       {cat.name}
                       <ChevronRight size={16} className="text-black/30 dark:text-white/30" />

@@ -213,7 +213,7 @@ export function ProductForm({ product }: { product?: Product }) {
       <button
         type="submit"
         disabled={submitting}
-        className="mt-2 w-fit rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:opacity-60"
+        className="mt-2 w-fit rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:opacity-60"
       >
         {submitting ? "Saving..." : isEdit ? "Save changes" : "Create product"}
       </button>
