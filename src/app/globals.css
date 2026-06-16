@@ -10,9 +10,27 @@
   --color-foreground: var(--foreground);
   --color-canvas: #FAF8F5;
   --color-charcoal: #1A1A1A;
-  --color-clay: oklch(0.55 0.08 50);
-  --color-clay-light: oklch(0.93 0.03 50);
-  --font-sans: var(--font-sans);
+
+  /* ── Rust / Terracotta scale (replaces teal as primary brand color) ── */
+  --color-teal-50:  #fef4f0;
+  --color-teal-100: #fde3da;
+  --color-teal-200: #f9c3b4;
+  --color-teal-300: #f49a86;
+  --color-teal-400: #ec7259;
+  --color-teal-500: #d96b52;
+  --color-teal-600: #cc5f47;
+  --color-teal-700: #c4604a;   /* primary brand — rust terracotta */
+  --color-teal-800: #a34038;   /* hover / dark state */
+  --color-teal-900: #7d3029;
+  --color-teal-950: #3d1611;
+
+  /* ── Additional palette colors ── */
+  --color-peach:   #e8a87a;
+  --color-sage:    #8baf78;
+  --color-forest:  #4a6840;
+
+  /* ── Fonts ── */
+  --font-sans:  var(--font-sans);
   --font-serif: var(--font-serif);
 }
 
