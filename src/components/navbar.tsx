@@ -15,6 +15,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { useCartStore } from "@/lib/cart-store";
 import { useWishlistStore } from "@/lib/wishlist-store";
+import { useAuthDrawerStore } from "@/lib/auth-drawer-store";
 import { logOut } from "@/lib/auth";
 import { listCategories } from "@/lib/categories";
 
@@ -30,6 +31,7 @@ export function Navbar() {
   const [activeTab, setActiveTab] = useState<"menu" | "categories">("menu");
   const [categories, setCategories] = useState<Category[]>([]);
   const [accountOpen, setAccountOpen] = useState(false);
+  const openAuthDrawer = useAuthDrawerStore((s) => s.open);
 
   useEffect(() => {
     if (drawerOpen) {
@@ -162,13 +164,12 @@ export function Navbar() {
                       </button>
                     </>
                   ) : (
-                    <Link
-                      href="/login"
-                      onClick={() => setAccountOpen(false)}
-                      className="block px-4 py-2.5 text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
+                    <button
+                      onClick={() => { setAccountOpen(false); openAuthDrawer("signin"); }}
+                      className="block w-full px-4 py-2.5 text-left text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
                     >
                       Sign in
-                    </Link>
+                    </button>
                   )}
                 </div>
               )}
@@ -301,13 +302,12 @@ export function Navbar() {
                       Sign out
                     </button>
                   ) : (
-                    <Link
-                      href="/login"
-                      onClick={closeDrawer}
-                      className="block px-5 py-4 text-sm font-medium hover:text-teal-700"
+                    <button
+                      onClick={() => { closeDrawer(); openAuthDrawer("signin"); }}
+                      className="w-full px-5 py-4 text-left text-sm font-medium hover:text-teal-700"
                     >
                       Sign in
-                    </Link>
+                    </button>
                   )}
                 </div>
               </nav>

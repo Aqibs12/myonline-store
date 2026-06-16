@@ -9,6 +9,7 @@ import { AnnouncementBar } from "@/components/announcement-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { FloatingButtons } from "@/components/floating-buttons";
 import { CartDrawer } from "@/components/cart-drawer";
+import { AuthDrawer } from "@/components/auth-drawer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +48,7 @@ export default function RootLayout({
           {/* Spacer so footer content isn't hidden behind the fixed bottom nav */}
           <div className="h-16 md:hidden" aria-hidden />
           <CartDrawer />
+          <AuthDrawer />
           <FloatingButtons />
           <BottomNav />
           <Toaster position="bottom-center" containerStyle={{ bottom: "72px" }} />
