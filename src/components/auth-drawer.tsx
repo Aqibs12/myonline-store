@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
-import { X, Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuthDrawerStore } from "@/lib/auth-drawer-store";
 import {
   authErrorMessage,
   registerWithEmail,
+  sendPasswordReset,
   signInWithEmail,
-  signInWithGoogle,
 } from "@/lib/auth";
 import {
   validateRegisterForm,
@@ -30,7 +30,12 @@ export function AuthDrawer() {
   const [errors, setErrors] = useState<AuthFieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
-  // Reset form when switching mode or closing
+  // Forgot password state
+  const [forgotMode, setForgotMode] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSent, setResetSent] = useState(false);
+
+  // Reset everything when switching mode or closing
   useEffect(() => {
     setFirstName("");
     setLastName("");
@@ -39,6 +44,9 @@ export function AuthDrawer() {
     setShowPassword(false);
     setErrors({});
     setSubmitting(false);
+    setForgotMode(false);
+    setResetEmail("");
+    setResetSent(false);
   }, [mode, isOpen]);
 
   useEffect(() => {
@@ -46,9 +54,8 @@ export function AuthDrawer() {
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
     const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
     const fieldErrors =
       mode === "register"
@@ -61,7 +68,6 @@ export function AuthDrawer() {
     }
     setErrors({});
     setSubmitting(true);
-
     try {
       if (mode === "signin") {
         await signInWithEmail(email, password);
@@ -78,12 +84,14 @@ export function AuthDrawer() {
     }
   }
 
-  async function handleGoogle() {
+  async function handleForgotPassword(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = resetEmail.trim();
+    if (!trimmed) return;
     setSubmitting(true);
     try {
-      await signInWithGoogle();
-      toast.success("Signed in with Google");
-      close();
+      await sendPasswordReset(trimmed);
+      setResetSent(true);
     } catch (error) {
       toast.error(authErrorMessage(error));
     } finally {
@@ -105,9 +113,20 @@ export function AuthDrawer() {
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-black/10 px-6 py-5 dark:border-white/10">
-          <h2 className="text-sm font-bold uppercase tracking-widest">
-            {mode === "signin" ? "Login" : "Register"}
-          </h2>
+          <div className="flex items-center gap-2">
+            {forgotMode && (
+              <button
+                onClick={() => { setForgotMode(false); setResetSent(false); setResetEmail(""); }}
+                className="rounded-full p-1 transition hover:bg-black/5 dark:hover:bg-white/10"
+                aria-label="Back"
+              >
+                <ArrowLeft size={18} />
+              </button>
+            )}
+            <h2 className="text-sm font-bold uppercase tracking-widest">
+              {forgotMode ? "Reset Password" : mode === "signin" ? "Login" : "Register"}
+            </h2>
+          </div>
           <button
             onClick={close}
             aria-label="Close"
@@ -117,8 +136,58 @@ export function AuthDrawer() {
           </button>
         </div>
 
-        {/* Form */}
+        {/* Body */}
         <div className="flex-1 overflow-y-auto px-6 py-6">
+
+          {/* ── Forgot password view ── */}
+          {forgotMode ? (
+            resetSent ? (
+              <div className="flex flex-col items-center gap-4 py-8 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-2xl dark:bg-teal-950/40">
+                  ✉️
+                </div>
+                <p className="text-sm font-medium">Check your email</p>
+                <p className="text-sm text-black/55 dark:text-white/55">
+                  We sent a password reset link to{" "}
+                  <span className="font-medium text-black dark:text-white">{resetEmail}</span>.
+                </p>
+                <button
+                  onClick={() => { setForgotMode(false); setResetSent(false); setResetEmail(""); }}
+                  className="mt-2 text-sm text-teal-700 underline underline-offset-2 hover:text-teal-800"
+                >
+                  Back to login
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleForgotPassword} noValidate className="flex flex-col gap-4">
+                <p className="text-sm text-black/55 dark:text-white/55">
+                  Enter your email address and we&apos;ll send you a link to reset your password.
+                </p>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-medium text-black/60 dark:text-white/60">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className={fieldCls}
+                    autoFocus
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={submitting || !resetEmail.trim()}
+                  className="w-full rounded-full bg-teal-700 py-3.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:opacity-60"
+                >
+                  {submitting ? "Sending…" : "Send Reset Link"}
+                </button>
+              </form>
+            )
+          ) : (
+
+          /* ── Login / Register view ── */
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
 
             {/* Register-only: First + Last name */}
@@ -199,10 +268,11 @@ export function AuthDrawer() {
               )}
             </div>
 
-            {/* Forgot password — sign in only */}
+            {/* Forgot password */}
             {mode === "signin" && (
               <button
                 type="button"
+                onClick={() => { setResetEmail(email); setForgotMode(true); }}
                 className="w-fit text-left text-sm text-black/60 underline underline-offset-2 hover:text-black dark:text-white/60 dark:hover:text-white"
               >
                 Forgot your password?
@@ -215,38 +285,37 @@ export function AuthDrawer() {
               disabled={submitting}
               className="mt-1 w-full rounded-full bg-teal-700 py-3.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:opacity-60"
             >
-              {submitting
-                ? "Please wait…"
-                : mode === "signin"
-                ? "Sign In"
-                : "Register"}
+              {submitting ? "Please wait…" : mode === "signin" ? "Sign In" : "Register"}
             </button>
-          </form>
 
-          {/* Switch mode link */}
-          <p className="mt-6 text-center text-sm text-black/60 dark:text-white/60">
-            {mode === "signin" ? (
-              <>
-                New customer?{" "}
-                <button
-                  onClick={() => setMode("register")}
-                  className="font-medium text-black underline underline-offset-2 hover:text-teal-700 dark:text-white"
-                >
-                  Create your account
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button
-                  onClick={() => setMode("signin")}
-                  className="font-medium text-black underline underline-offset-2 hover:text-teal-700 dark:text-white"
-                >
-                  Login here
-                </button>
-              </>
-            )}
-          </p>
+            {/* Switch mode */}
+            <p className="mt-2 text-center text-sm text-black/60 dark:text-white/60">
+              {mode === "signin" ? (
+                <>
+                  New customer?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setMode("register")}
+                    className="font-medium text-black underline underline-offset-2 hover:text-teal-700 dark:text-white"
+                  >
+                    Create your account
+                  </button>
+                </>
+              ) : (
+                <>
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setMode("signin")}
+                    className="font-medium text-black underline underline-offset-2 hover:text-teal-700 dark:text-white"
+                  >
+                    Login here
+                  </button>
+                </>
+              )}
+            </p>
+          </form>
+          )}
         </div>
       </div>
     </div>

@@ -29,6 +29,12 @@ export function logOut() {
   return signOut(getFirebaseAuth());
 }
 
+export function sendPasswordReset(email: string) {
+  return import("firebase/auth").then(({ sendPasswordResetEmail }) =>
+    sendPasswordResetEmail(getFirebaseAuth(), email)
+  );
+}
+
 export function authErrorMessage(error: unknown): string {
   if (error && typeof error === "object" && "code" in error) {
     const code = String((error as { code: unknown }).code);
