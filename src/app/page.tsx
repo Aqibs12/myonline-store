@@ -3,6 +3,7 @@ import { ArrowRight, Truck, RotateCcw, Shield, Headphones } from "lucide-react";
 import { listActiveProducts } from "@/lib/products";
 import { ProductCard } from "@/components/product-card";
 import { Testimonials } from "@/components/testimonials";
+import { HeroSlider } from "@/components/hero-slider";
 
 const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "My Online Store";
 
@@ -35,35 +36,16 @@ export default async function Home() {
   const products = await listActiveProducts();
   const featured = products.slice(0, 8);
 
+  // Collect up to 9 product images to populate the slider's right-side circles
+  const sliderImages = products
+    .flatMap((p) => p.images.slice(0, 2))
+    .filter(Boolean)
+    .slice(0, 9) as string[];
+
   return (
     <div className="flex flex-col">
-      {/* Hero */}
-      <section className="border-b border-black/10 bg-white py-20 dark:border-white/10 dark:bg-black">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center">
-          <span className="rounded-full bg-green-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-green-700 dark:bg-green-900/30 dark:text-green-400">
-            New Arrivals Available
-          </span>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">{STORE_NAME}</h1>
-          <p className="max-w-xl text-black/60 dark:text-white/60">
-            Quality products, fair prices, delivered to your door — Cash on Delivery, JazzCash &amp; Easypaisa accepted.
-          </p>
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
-            >
-              Shop now
-              <ArrowRight size={16} />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-black/15 px-6 py-3 text-sm font-semibold transition hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
-            >
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Hero slider */}
+      <HeroSlider images={sliderImages} />
 
       {/* Trust badges */}
       <section className="border-b border-black/10 bg-gray-50 dark:border-white/10 dark:bg-white/5">
