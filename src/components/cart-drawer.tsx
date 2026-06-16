@@ -8,7 +8,6 @@ import {
   Trash2,
   ShoppingBag,
   Clipboard,
-  Truck,
   Tag,
   ChevronLeft,
   ChevronRight,
@@ -154,7 +153,6 @@ export function CartDrawer() {
               <div className="flex items-center justify-center gap-4 border-y border-black/8 py-4 dark:border-white/8">
                 {[
                   { id: "note" as Panel, Icon: Clipboard, label: "Add order note" },
-                  { id: null, Icon: Truck, label: "Delivery info" },
                   { id: "coupon" as Panel, Icon: Tag, label: "Add coupon" },
                 ].map(({ id, Icon, label }) => (
                   <button
