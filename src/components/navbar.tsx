@@ -10,12 +10,14 @@ import {
   LayoutDashboard,
   Search,
   ChevronRight,
+  Heart,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useCartStore } from "@/lib/cart-store";
+import { useWishlistStore } from "@/lib/wishlist-store";
 import { logOut } from "@/lib/auth";
-import { formatPrice } from "@/lib/format";
 import { listCategories } from "@/lib/categories";
+
 import type { Category } from "@/types";
 
 const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "My Online Store";
@@ -23,10 +25,11 @@ const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "My Online Store";
 export function Navbar() {
   const { user, isOwner } = useAuth();
   const totalQuantity = useCartStore((s) => s.totalQuantity());
-  const subtotal = useCartStore((s) => s.subtotal());
+  const wishlistCount = useWishlistStore((s) => s.count());
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"menu" | "categories">("menu");
   const [categories, setCategories] = useState<Category[]>([]);
+  const [accountOpen, setAccountOpen] = useState(false);
 
   useEffect(() => {
     if (drawerOpen) {
@@ -121,41 +124,83 @@ export function Navbar() {
             )}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            {/* Search */}
+            <Link
+              href="/products"
+              aria-label="Search"
+              className="rounded-full p-2 transition hover:bg-black/5 dark:hover:bg-white/10"
+            >
+              <Search size={20} />
+            </Link>
+
+            {/* Account dropdown */}
+            <div className="relative" data-account-menu>
+              <button
+                onClick={() => setAccountOpen((o) => !o)}
+                aria-label="Account"
+                className="rounded-full p-2 transition hover:bg-black/5 dark:hover:bg-white/10"
+              >
+                <UserIcon size={20} />
+              </button>
+              {accountOpen && (
+                <div className="absolute right-0 top-full z-50 mt-1 min-w-40 overflow-hidden rounded-xl border border-black/10 bg-white shadow-lg dark:border-white/10 dark:bg-neutral-900">
+                  {user ? (
+                    <>
+                      <Link
+                        href="/orders"
+                        onClick={() => setAccountOpen(false)}
+                        className="block px-4 py-2.5 text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
+                      >
+                        My Orders
+                      </Link>
+                      <button
+                        onClick={() => { logOut(); setAccountOpen(false); }}
+                        className="block w-full px-4 py-2.5 text-left text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
+                      >
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={() => setAccountOpen(false)}
+                      className="block px-4 py-2.5 text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
+                    >
+                      Sign in
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Wishlist */}
+            <Link
+              href="/wishlist"
+              aria-label="Wishlist"
+              className="relative rounded-full p-2 transition hover:bg-black/5 dark:hover:bg-white/10"
+            >
+              <Heart size={20} />
+              {wishlistCount > 0 && (
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-600 px-0.5 text-[10px] font-bold text-white">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Cart */}
             <Link
               href="/cart"
-              className="relative flex items-center gap-1.5 rounded-full px-2 py-1.5 hover:bg-black/5 dark:hover:bg-white/10"
+              aria-label="Cart"
+              className="relative rounded-full p-2 transition hover:bg-black/5 dark:hover:bg-white/10"
             >
               <ShoppingCart size={20} />
               {totalQuantity > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-green-600 px-1 text-xs font-semibold text-white">
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-600 px-0.5 text-[10px] font-bold text-white">
                   {totalQuantity}
                 </span>
               )}
-              <span className="hidden text-sm font-medium sm:block">
-                {totalQuantity > 0
-                  ? `${totalQuantity} item${totalQuantity > 1 ? "s" : ""} / ${formatPrice(subtotal)}`
-                  : "Cart"}
-              </span>
             </Link>
-
-            {user ? (
-              <button
-                onClick={() => logOut()}
-                className="flex items-center gap-1 rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium hover:bg-black/5 dark:border-white/15 dark:hover:bg-white/10"
-              >
-                <UserIcon size={16} />
-                Sign out
-              </button>
-            ) : (
-              <Link
-                href="/login"
-                className="flex items-center gap-1 rounded-full bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700"
-              >
-                <UserIcon size={16} />
-                Sign in
-              </Link>
-            )}
           </div>
         </div>
       </header>
