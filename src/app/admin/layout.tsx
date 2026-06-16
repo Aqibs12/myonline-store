@@ -27,7 +27,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <p className="text-black/60 dark:text-white/60">
           This dashboard is restricted to the store owner. Sign in with the owner account to manage products and orders.
         </p>
-        <Link href="/login" className="mt-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700">
+        <Link href="/login" className="mt-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
           Sign in
         </Link>
       </div>
@@ -45,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             className={clsx(
               "rounded-full px-3 py-1.5 text-sm font-medium transition",
               pathname === item.href
-                ? "bg-orange-600 text-white"
+                ? "bg-green-600 text-white"
                 : "text-black/60 hover:bg-black/5 dark:text-white/60 dark:hover:bg-white/10"
             )}
           >

@@ -45,7 +45,7 @@ export default function AdminProductsPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Products</h2>
-        <Link href="/admin/products/new" className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700">
+        <Link href="/admin/products/new" className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
           + Add product
         </Link>
       </div>
@@ -77,7 +77,7 @@ export default function AdminProductsPage() {
               <span className="w-24 text-right text-sm font-semibold">{formatPrice(product.price)}</span>
               <Link
                 href={`/admin/products/${product.id}`}
-                className="rounded-full p-2 text-black/50 hover:bg-black/5 hover:text-orange-600 dark:hover:bg-white/10"
+                className="rounded-full p-2 text-black/50 hover:bg-black/5 hover:text-green-600 dark:hover:bg-white/10"
                 aria-label="Edit product"
               >
                 <Pencil size={16} />

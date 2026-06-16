@@ -39,7 +39,7 @@ export default function CheckoutPage() {
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 px-4 text-center">
         <h1 className="text-2xl font-bold">Your cart is empty</h1>
-        <Link href="/products" className="mt-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700">
+        <Link href="/products" className="mt-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
           Continue shopping
         </Link>
       </div>
@@ -92,7 +92,7 @@ export default function CheckoutPage() {
       {!loading && !user && (
         <p className="mt-2 text-sm text-black/60 dark:text-white/60">
           Checking out as a guest.{" "}
-          <Link href="/login" className="font-semibold text-orange-600 hover:underline">
+          <Link href="/login" className="font-semibold text-green-600 hover:underline">
             Sign in
           </Link>{" "}
           to track this order in your account.
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
             {PAYMENT_OPTIONS.map((opt) => (
               <label
                 key={opt.value}
-                className="flex cursor-pointer items-start gap-3 rounded-lg border border-black/15 p-3 text-sm transition has-[:checked]:border-orange-600 has-[:checked]:bg-orange-50 dark:border-white/20 dark:has-[:checked]:bg-orange-950/20"
+                className="flex cursor-pointer items-start gap-3 rounded-lg border border-black/15 p-3 text-sm transition has-[:checked]:border-green-600 has-[:checked]:bg-green-50 dark:border-white/20 dark:has-[:checked]:bg-green-950/20"
               >
                 <input
                   type="radio"
@@ -194,7 +194,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-700 disabled:opacity-60"
+            className="mt-4 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:opacity-60"
           >
             {submitting ? "Placing order..." : `Place order — ${formatPrice(total)}`}
           </button>

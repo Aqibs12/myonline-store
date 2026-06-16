@@ -171,7 +171,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-700 disabled:opacity-60"
+          className="rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:opacity-60"
         >
           {mode === "signin" ? "Sign in" : "Create account"}
         </button>
@@ -201,7 +201,7 @@ export default function LoginPage() {
         {mode === "signin" ? "Don't have an account?" : "Already have an account?"}{" "}
         <button
           onClick={() => switchMode(mode === "signin" ? "register" : "signin")}
-          className="font-semibold text-orange-600 hover:underline"
+          className="font-semibold text-green-600 hover:underline"
         >
           {mode === "signin" ? "Create one" : "Sign in"}
         </button>

@@ -29,7 +29,7 @@ export default function OrdersPage() {
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 px-4 text-center">
         <h1 className="text-2xl font-bold">Sign in to view your orders</h1>
-        <Link href="/login" className="mt-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700">
+        <Link href="/login" className="mt-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
           Sign in
         </Link>
       </div>
@@ -45,7 +45,7 @@ export default function OrdersPage() {
       ) : orders.length === 0 ? (
         <div className="mt-6 flex flex-col items-start gap-3">
           <p className="text-black/60 dark:text-white/60">You haven&apos;t placed any orders yet.</p>
-          <Link href="/products" className="rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700">
+          <Link href="/products" className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700">
             Browse products
           </Link>
         </div>

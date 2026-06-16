@@ -6,12 +6,14 @@ import { ShoppingCart, User as UserIcon, Menu, X, LayoutDashboard } from "lucide
 import { useAuth } from "@/lib/auth-context";
 import { useCartStore } from "@/lib/cart-store";
 import { logOut } from "@/lib/auth";
+import { formatPrice } from "@/lib/format";
 
 const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "My Online Store";
 
 export function Navbar() {
   const { user, isOwner } = useAuth();
   const totalQuantity = useCartStore((s) => s.totalQuantity());
+  const subtotal = useCartStore((s) => s.subtotal());
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,19 +24,25 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link href="/" className="hover:text-orange-600">
+          <Link href="/" className="hover:text-green-600">
             Home
           </Link>
-          <Link href="/products" className="hover:text-orange-600">
-            Shop
+          <Link href="/products" className="hover:text-green-600">
+            All Products
+          </Link>
+          <Link href="/about" className="hover:text-green-600">
+            About Us
+          </Link>
+          <Link href="/contact" className="hover:text-green-600">
+            Contact Us
           </Link>
           {user && (
-            <Link href="/orders" className="hover:text-orange-600">
+            <Link href="/orders" className="hover:text-green-600">
               My Orders
             </Link>
           )}
           {isOwner && (
-            <Link href="/admin" className="flex items-center gap-1 hover:text-orange-600">
+            <Link href="/admin" className="flex items-center gap-1 hover:text-green-600">
               <LayoutDashboard size={16} />
               Dashboard
             </Link>
@@ -42,13 +50,19 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link href="/cart" className="relative rounded-full p-2 hover:bg-black/5 dark:hover:bg-white/10">
+          <Link
+            href="/cart"
+            className="relative flex items-center gap-1.5 rounded-full px-2 py-1.5 hover:bg-black/5 dark:hover:bg-white/10"
+          >
             <ShoppingCart size={20} />
             {totalQuantity > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-600 px-1 text-xs font-semibold text-white">
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-green-600 px-1 text-xs font-semibold text-white">
                 {totalQuantity}
               </span>
             )}
+            <span className="hidden text-sm font-medium sm:block">
+              {totalQuantity > 0 ? `${totalQuantity} item${totalQuantity > 1 ? "s" : ""} / ${formatPrice(subtotal)}` : "Cart"}
+            </span>
           </Link>
 
           {user ? (
@@ -62,7 +76,7 @@ export function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="hidden items-center gap-1 rounded-full bg-orange-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-orange-700 sm:flex"
+              className="hidden items-center gap-1 rounded-full bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 sm:flex"
             >
               <UserIcon size={16} />
               Sign in
@@ -85,7 +99,13 @@ export function Navbar() {
             Home
           </Link>
           <Link href="/products" className="rounded px-2 py-2 hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
-            Shop
+            All Products
+          </Link>
+          <Link href="/about" className="rounded px-2 py-2 hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+            About Us
+          </Link>
+          <Link href="/contact" className="rounded px-2 py-2 hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+            Contact Us
           </Link>
           {user && (
             <Link href="/orders" className="rounded px-2 py-2 hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>

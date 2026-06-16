@@ -34,7 +34,7 @@ export function ProductCard({ product }: { product: Product }) {
         )}
       </Link>
       <div className="flex flex-1 flex-col gap-1 p-3">
-        <Link href={`/products/${product.slug}`} className="line-clamp-2 text-sm font-medium hover:text-orange-600">
+        <Link href={`/products/${product.slug}`} className="line-clamp-2 text-sm font-medium hover:text-green-600">
           {product.name}
         </Link>
         <div className="mt-auto flex items-center gap-2 pt-2">
@@ -49,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
             addItem(product, 1);
             toast.success(`${product.name} added to cart`);
           }}
-          className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-orange-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-black/20"
+          className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-green-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-black/20"
         >
           <ShoppingCart size={16} />
           Add to cart

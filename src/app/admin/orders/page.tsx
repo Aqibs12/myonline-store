@@ -64,7 +64,7 @@ export default function AdminOrdersPage() {
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order, e.target.value as OrderStatus)}
-                    className="rounded-lg border border-black/15 bg-transparent px-2 py-1.5 text-xs font-medium outline-none focus:border-orange-600 dark:border-white/20"
+                    className="rounded-lg border border-black/15 bg-transparent px-2 py-1.5 text-xs font-medium outline-none focus:border-green-600 dark:border-white/20"
                   >
                     {STATUSES.map((s) => (
                       <option key={s} value={s} className="text-black">
