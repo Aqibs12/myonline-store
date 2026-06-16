@@ -138,41 +138,30 @@ export function Navbar() {
               <Search size={20} />
             </Link>
 
-            {/* Account dropdown */}
+            {/* Account — opens auth drawer when signed out, dropdown when signed in */}
             <div className="relative" data-account-menu>
               <button
-                onClick={() => setAccountOpen((o) => !o)}
+                onClick={() => user ? setAccountOpen((o) => !o) : openAuthDrawer("signin")}
                 aria-label="Account"
                 className="rounded-full p-2 transition hover:bg-black/5 dark:hover:bg-white/10"
               >
                 <UserIcon size={20} />
               </button>
-              {accountOpen && (
+              {user && accountOpen && (
                 <div className="absolute right-0 top-full z-50 mt-1 min-w-40 overflow-hidden rounded-xl border border-black/10 bg-white shadow-lg dark:border-white/10 dark:bg-neutral-900">
-                  {user ? (
-                    <>
-                      <Link
-                        href="/orders"
-                        onClick={() => setAccountOpen(false)}
-                        className="block px-4 py-2.5 text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
-                      >
-                        My Orders
-                      </Link>
-                      <button
-                        onClick={() => { logOut(); setAccountOpen(false); }}
-                        className="block w-full px-4 py-2.5 text-left text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
-                      >
-                        Sign out
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => { setAccountOpen(false); openAuthDrawer("signin"); }}
-                      className="block w-full px-4 py-2.5 text-left text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
-                    >
-                      Sign in
-                    </button>
-                  )}
+                  <Link
+                    href="/orders"
+                    onClick={() => setAccountOpen(false)}
+                    className="block px-4 py-2.5 text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
+                  >
+                    My Orders
+                  </Link>
+                  <button
+                    onClick={() => { logOut(); setAccountOpen(false); }}
+                    className="block w-full px-4 py-2.5 text-left text-sm transition hover:bg-black/5 dark:hover:bg-white/10"
+                  >
+                    Sign out
+                  </button>
                 </div>
               )}
             </div>
