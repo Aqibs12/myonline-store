@@ -9,6 +9,9 @@ import type { Category } from "@/types";
 
 const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME ?? "My Online Store";
 
+const linkCls =
+  "text-white/75 transition hover:text-white visited:text-white/75";
+
 export function Footer() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [email, setEmail] = useState("");
@@ -24,25 +27,30 @@ export function Footer() {
 
           {/* Col 1 — Contact + Social */}
           <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-3 text-sm text-white/80">
-              <a href="mailto:shop@myonlinestore.pk" className="flex items-center gap-2 transition hover:text-white">
+            <div className="flex flex-col gap-3 text-sm">
+              <a
+                href="mailto:shop@myonlinestore.pk"
+                className={`flex items-center gap-2 ${linkCls}`}
+              >
                 <Mail size={15} className="shrink-0" />
                 Email: shop@myonlinestore.pk
               </a>
-              <a href="tel:+923000000000" className="flex items-center gap-2 transition hover:text-white">
+              <a
+                href="tel:+923000000000"
+                className={`flex items-center gap-2 ${linkCls}`}
+              >
                 <Phone size={15} className="shrink-0" />
                 Call us : +92-300-0000000
               </a>
             </div>
             <div>
-              <p className="mb-2.5 text-sm font-bold">Follow Us</p>
+              <p className="mb-2.5 text-sm font-bold text-white">Follow Us</p>
               <div className="flex gap-2">
                 <a
                   href="#"
                   aria-label="Facebook"
-                  className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 transition hover:bg-white/20"
+                  className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-white/20"
                 >
-                  {/* Facebook */}
                   <svg viewBox="0 0 24 24" fill="currentColor" className="h-[18px] w-[18px]">
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                   </svg>
@@ -50,9 +58,8 @@ export function Footer() {
                 <a
                   href="#"
                   aria-label="Instagram"
-                  className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 transition hover:bg-white/20"
+                  className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-white/20"
                 >
-                  {/* Instagram */}
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                     <circle cx="12" cy="12" r="4" />
@@ -65,20 +72,20 @@ export function Footer() {
 
           {/* Col 2 — Categories */}
           <div className="flex flex-col gap-3">
-            <p className="font-bold">Categories</p>
-            <div className="flex flex-col gap-2.5 text-sm text-white/75">
+            <p className="font-bold text-white">Categories</p>
+            <div className="flex flex-col gap-2.5 text-sm">
               {categories.length > 0 ? (
                 categories.slice(0, 6).map((cat) => (
                   <Link
                     key={cat.id}
                     href={`/products?category=${encodeURIComponent(cat.id)}`}
-                    className="capitalize transition hover:text-white"
+                    className={`capitalize ${linkCls}`}
                   >
                     {cat.name}
                   </Link>
                 ))
               ) : (
-                <Link href="/products" className="transition hover:text-white">
+                <Link href="/products" className={linkCls}>
                   All Products
                 </Link>
               )}
@@ -87,28 +94,28 @@ export function Footer() {
 
           {/* Col 3 — Customer Care */}
           <div className="flex flex-col gap-3">
-            <p className="font-bold">Customer Care</p>
-            <div className="flex flex-col gap-2.5 text-sm text-white/75">
-              <Link href="/products" className="transition hover:text-white">Search</Link>
-              <Link href="/about" className="transition hover:text-white">About Us</Link>
-              <Link href="/contact" className="transition hover:text-white">Contact Us</Link>
-              <Link href="/contact" className="transition hover:text-white">Return Policy</Link>
+            <p className="font-bold text-white">Customer Care</p>
+            <div className="flex flex-col gap-2.5 text-sm">
+              <Link href="/products" className={linkCls}>Search</Link>
+              <Link href="/about" className={linkCls}>About Us</Link>
+              <Link href="/contact" className={linkCls}>Contact Us</Link>
+              <Link href="/contact" className={linkCls}>Return Policy</Link>
             </div>
           </div>
 
           {/* Col 4 — Information */}
           <div className="flex flex-col gap-3">
-            <p className="font-bold">Information</p>
-            <div className="flex flex-col gap-2.5 text-sm text-white/75">
-              <Link href="/contact" className="transition hover:text-white">Privacy Policy</Link>
-              <Link href="/contact" className="transition hover:text-white">Refund Policy</Link>
-              <Link href="/contact" className="transition hover:text-white">Terms of Service</Link>
+            <p className="font-bold text-white">Information</p>
+            <div className="flex flex-col gap-2.5 text-sm">
+              <Link href="/contact" className={linkCls}>Privacy Policy</Link>
+              <Link href="/contact" className={linkCls}>Refund Policy</Link>
+              <Link href="/contact" className={linkCls}>Terms of Service</Link>
             </div>
           </div>
 
           {/* Col 5 — Newsletter */}
           <div className="flex flex-col gap-3">
-            <p className="font-bold">Newsletter Signup</p>
+            <p className="font-bold text-white">Newsletter Signup</p>
             <p className="text-sm text-white/75">
               Subscribe to our newsletter and stay updated with the latest products and discounts
             </p>
