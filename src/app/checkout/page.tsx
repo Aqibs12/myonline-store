@@ -23,7 +23,6 @@ export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const items = useCartStore((s) => s.items);
   const subtotal = useCartStore((s) => s.subtotal());
-  const total = subtotal + SHIPPING_FEE;
   const clear = useCartStore((s) => s.clear);
 
   const [fullName, setFullName] = useState("");
@@ -34,6 +33,22 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [errors, setErrors] = useState<CheckoutFieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
+
+  const [couponCode, setCouponCode] = useState("");
+  const [couponApplied, setCouponApplied] = useState<string | null>(null);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState("");
+
+  const total = subtotal + SHIPPING_FEE - couponDiscount;
+
+  function handleApplyCoupon() {
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+    // Placeholder — extend with real codes from Firestore/env as needed
+    setCouponError("Invalid discount code.");
+    setCouponApplied(null);
+    setCouponDiscount(0);
+  }
 
   if (!loading && items.length === 0) {
     return (
@@ -46,7 +61,7 @@ export default function CheckoutPage() {
     );
   }
 
-  async function handleSubmit(e: FormEvent) {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const fieldErrors = validateCheckoutForm(fullName, phone, address, city);
@@ -212,6 +227,46 @@ export default function CheckoutPage() {
               </li>
             ))}
           </ul>
+          {/* Discount code */}
+          <div className="mt-4 border-t border-black/10 pt-4 dark:border-white/10">
+            {couponApplied ? (
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium text-teal-700">
+                  Code &quot;{couponApplied}&quot; applied
+                </span>
+                <button
+                  type="button"
+                  onClick={() => { setCouponApplied(null); setCouponDiscount(0); setCouponCode(""); setCouponError(""); }}
+                  className="text-xs text-black/40 underline hover:text-black dark:text-white/40 dark:hover:text-white"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => { setCouponCode(e.target.value); setCouponError(""); }}
+                    placeholder="Discount code"
+                    className="flex-1 rounded-lg border border-black/15 px-3 py-2 text-sm outline-none transition focus:border-teal-700 dark:border-white/20 dark:bg-neutral-800"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    className="rounded-lg border border-black/15 px-4 py-2 text-sm font-medium transition hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+                  >
+                    Apply
+                  </button>
+                </div>
+                {couponError && (
+                  <span className="text-xs text-red-500">{couponError}</span>
+                )}
+              </div>
+            )}
+          </div>
+
           <div className="mt-4 flex flex-col gap-1.5 border-t border-black/10 pt-3 text-sm dark:border-white/10">
             <div className="flex justify-between text-black/70 dark:text-white/70">
               <span>Subtotal</span>
@@ -221,6 +276,12 @@ export default function CheckoutPage() {
               <span>Standard Shipping</span>
               <span>{formatPrice(SHIPPING_FEE)}</span>
             </div>
+            {couponDiscount > 0 && (
+              <div className="flex justify-between text-teal-700">
+                <span>Discount</span>
+                <span>−{formatPrice(couponDiscount)}</span>
+              </div>
+            )}
             <div className="flex justify-between border-t border-black/10 pt-1.5 font-bold dark:border-white/10">
               <span>Total</span>
               <span>{formatPrice(total)}</span>
