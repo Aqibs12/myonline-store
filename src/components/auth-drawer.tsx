@@ -150,24 +150,19 @@ export function AuthDrawer() {
 
             {/* Email */}
             <div className="flex flex-col gap-1">
-              <div className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (errors.email) setErrors((p) => ({ ...p, email: undefined }));
-                  }}
-                  placeholder={`Email ${""}`}
-                  className={`${fieldCls} ${errors.email ? "border-red-400" : ""}`}
-                />
-                <span className="pointer-events-none absolute left-[53px] top-3 text-sm text-red-500">
-                  *
-                </span>
-                <span className="pointer-events-none absolute left-[10px] top-3 text-sm text-black/50 dark:text-white/50">
-                  Email
-                </span>
-              </div>
+              <label className="text-xs font-medium text-black/60 dark:text-white/60">
+                Email <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((p) => ({ ...p, email: undefined }));
+                }}
+                placeholder="you@example.com"
+                className={`${fieldCls} ${errors.email ? "border-red-400" : ""}`}
+              />
               {errors.email && (
                 <span className="text-xs text-red-500">{errors.email}</span>
               )}
@@ -175,6 +170,9 @@ export function AuthDrawer() {
 
             {/* Password */}
             <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-black/60 dark:text-white/60">
+                Password <span className="text-red-500">*</span>
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -183,15 +181,9 @@ export function AuthDrawer() {
                     setPassword(e.target.value);
                     if (errors.password) setErrors((p) => ({ ...p, password: undefined }));
                   }}
+                  placeholder="••••••••"
                   className={`${fieldCls} pr-10 ${errors.password ? "border-red-400" : ""}`}
-                  placeholder=" "
                 />
-                <span className="pointer-events-none absolute left-[10px] top-3 text-sm text-black/50 dark:text-white/50">
-                  Password
-                </span>
-                <span className="pointer-events-none absolute left-[77px] top-3 text-sm text-red-500">
-                  *
-                </span>
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
