@@ -25,12 +25,15 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <>
       <div className="group flex flex-col overflow-hidden rounded-xl border border-black/10 bg-white transition hover:shadow-md dark:border-white/10 dark:bg-white/5">
-        {/* Image area */}
-        <div className="relative aspect-square w-full overflow-hidden bg-black/5 dark:bg-white/10">
-          <Link href={`/products/${product.slug}`} className="block h-full w-full">
+        {/* Image area — paddingBottom: 100% forces a reliable 1:1 square on all mobile browsers */}
+        <div
+          className="relative w-full overflow-hidden bg-black/5 dark:bg-white/10"
+          style={{ paddingBottom: "100%" }}
+        >
+          {/* Product link covers entire image area */}
+          <Link href={`/products/${product.slug}`} className="absolute inset-0">
             {image ? (
               <>
-                {/* Shimmer skeleton — visible while image loads, hides on load */}
                 {!imageLoaded && (
                   <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-black/10 via-black/5 to-black/10" />
                 )}
@@ -57,7 +60,7 @@ export function ProductCard({ product }: { product: Product }) {
               toast.success(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
             }}
             aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            className="absolute left-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md transition hover:scale-110 dark:bg-black/60"
+            className="absolute left-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md transition hover:scale-110 dark:bg-black/60"
           >
             <Heart
               size={15}
@@ -69,13 +72,13 @@ export function ProductCard({ product }: { product: Product }) {
 
           {/* Sold out badge — top-right */}
           {outOfStock && (
-            <span className="absolute right-2 top-2 rounded-full bg-black/55 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+            <span className="absolute right-2 top-2 z-10 rounded-full bg-black/55 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
               Sold out
             </span>
           )}
 
           {/* Quick view / Read more overlay — always visible on mobile, hover on desktop */}
-          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 bg-gradient-to-t from-black/25 to-transparent pb-4 pt-8 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100">
+          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-2 bg-gradient-to-t from-black/25 to-transparent pb-4 pt-8 opacity-100 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100">
             <button
               onClick={() => setShowQuickView(true)}
               className="rounded-full bg-white px-5 py-1.5 text-sm font-semibold text-black shadow-md transition hover:bg-gray-50 active:scale-95"
