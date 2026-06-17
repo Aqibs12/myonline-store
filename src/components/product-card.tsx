@@ -18,6 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
   const toggle = useWishlistStore((s) => s.toggle);
   const isWishlisted = useWishlistStore((s) => s.isWishlisted(product.id));
   const [showQuickView, setShowQuickView] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const image = product.images[0];
   const outOfStock = product.stock <= 0;
 
@@ -28,13 +29,20 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="relative aspect-square w-full overflow-hidden bg-black/5 dark:bg-white/10">
           <Link href={`/products/${product.slug}`} className="block h-full w-full">
             {image ? (
-              <Image
-                src={image}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover transition group-hover:scale-105"
-              />
+              <>
+                {/* Shimmer skeleton — visible while image loads, hides on load */}
+                {!imageLoaded && (
+                  <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-black/10 via-black/5 to-black/10" />
+                )}
+                <Image
+                  src={image}
+                  alt={product.name}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className={`object-cover transition-all duration-500 group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                  onLoad={() => setImageLoaded(true)}
+                />
+              </>
             ) : (
               <div className="flex h-full w-full items-center justify-center text-sm text-black/40">
                 No image

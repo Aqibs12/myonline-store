@@ -10,6 +10,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { FloatingButtons } from "@/components/floating-buttons";
 import { CartDrawer } from "@/components/cart-drawer";
 import { AuthDrawer } from "@/components/auth-drawer";
+import { ProgressBarProvider } from "@/components/progress-bar-provider";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-serif",
@@ -41,20 +42,22 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <AuthProvider>
-          <AnnouncementBar />
-          <Navbar />
-          {/* pb-16 md:pb-0 leaves room for the fixed bottom nav on mobile */}
-          <main className="flex-1 pb-16 md:pb-0">{children}</main>
-          <Footer />
-          {/* Spacer so footer content isn't hidden behind the fixed bottom nav */}
-          <div className="h-16 md:hidden" aria-hidden />
-          <CartDrawer />
-          <AuthDrawer />
-          <FloatingButtons />
-          <BottomNav />
-          <Toaster position="bottom-center" containerStyle={{ bottom: "72px" }} />
-        </AuthProvider>
+        <ProgressBarProvider>
+          <AuthProvider>
+            <AnnouncementBar />
+            <Navbar />
+            {/* pb-16 md:pb-0 leaves room for the fixed bottom nav on mobile */}
+            <main className="flex-1 pb-16 md:pb-0">{children}</main>
+            <Footer />
+            {/* Spacer so footer content isn't hidden behind the fixed bottom nav */}
+            <div className="h-16 md:hidden" aria-hidden />
+            <CartDrawer />
+            <AuthDrawer />
+            <FloatingButtons />
+            <BottomNav />
+            <Toaster position="bottom-center" containerStyle={{ bottom: "72px" }} />
+          </AuthProvider>
+        </ProgressBarProvider>
       </body>
     </html>
   );
