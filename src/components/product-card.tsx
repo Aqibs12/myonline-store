@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart } from "lucide-react";
 import toast from "react-hot-toast";
@@ -25,33 +24,30 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <>
       <div className="group flex flex-col overflow-hidden rounded-xl border border-black/10 bg-white transition hover:shadow-md dark:border-white/10 dark:bg-white/5">
-        {/* Image area — paddingBottom: 100% forces a reliable 1:1 square on all mobile browsers */}
-        <div
-          className="relative w-full overflow-hidden bg-black/5 dark:bg-white/10"
-          style={{ paddingBottom: "100%" }}
-        >
-          {/* Product link covers entire image area */}
-          <Link href={`/products/${product.slug}`} className="absolute inset-0">
+        {/* Image area — aspect-square on the <img> itself is the most reliable approach:
+            aspect-ratio on replaced elements (img) is universally supported and doesn't
+            depend on overflow/containing-block interactions that break with next/image fill */}
+        <div className="relative w-full overflow-hidden bg-black/5 dark:bg-white/10">
+          <Link href={`/products/${product.slug}`} className="block w-full">
             {image ? (
-              <>
-                {!imageLoaded && (
-                  <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-black/10 via-black/5 to-black/10" />
-                )}
-                <Image
-                  src={image}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className={`object-cover transition-all duration-500 group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-                  onLoad={() => setImageLoaded(true)}
-                />
-              </>
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={image}
+                alt={product.name}
+                className={`block w-full aspect-square object-cover transition-all duration-300 group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                onLoad={() => setImageLoaded(true)}
+              />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm text-black/40">
+              <div className="flex aspect-square items-center justify-center text-sm text-black/40">
                 No image
               </div>
             )}
           </Link>
+
+          {/* Shimmer skeleton — covers the square image area while the img loads */}
+          {image && !imageLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-black/10 via-black/5 to-black/10" />
+          )}
 
           {/* Favourite / heart button — top-left */}
           <button
